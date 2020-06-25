@@ -3,6 +3,31 @@ import { render } from 'react-dom'
 import { ResponsiveNetwork } from '@nivo/network'
 import { ResponsiveLine } from '@nivo/line'
 
+ var step = 30;
+
+  /*const CheckBox = () =>{
+  const [count, setCount] = useState(step);
+  const handleInputChange = (event) => {
+    step= event.target.value
+  };
+  const handleButtonClick = () => {
+    if (step > 100){
+      alert(`stepは100以下の値を入力してください!`);
+    }else{
+    setCount( step );
+    }
+  };
+  return (
+    <div>
+      <input type="text" onChange = {handleInputChange}/>
+      <button onClick= {handleButtonClick} > 
+        ステップ数を変更する！
+      </button>
+      <p>現在のステップ数{ count }</p>
+    </div>
+  );
+};*/
+
 
 //ネットワーク図
 const NetworkChart = () => {
@@ -25,6 +50,20 @@ const NetworkChart = () => {
       setData(data)
     })
   },[]) 
+   //新規作成部分
+   /*const [count, setCount] = useState(step);
+   const handleInputChange = (event) => {
+     step= event.target.value
+   };
+   const handleButtonClick = () => {
+     if (step > 100){
+       alert(`stepは100以下の値を入力してください!`);
+     }else{
+     setCount( step );
+     }
+   };*/
+   //ここまで
+
 
   const newLinks = data.links.filter(function(item,index){   
     if(item.weight >=5){
@@ -43,11 +82,10 @@ const NetworkChart = () => {
   }
   
   const newNodes = data.nodes.filter(check)
- 
 
   
-  console.log("これはNewWorkChartで使用するnewNodesの出力です");
-  console.log(newNodes)
+  //console.log("これはNewWorkChartで使用するnewNodesの出力です");
+  //console.log(newNodes)
   
 return (
   <div style={ {"width": "1000px", "height" : "1000px"}} >
@@ -58,12 +96,12 @@ return (
       repulsivity={3}
       iterations={50}
       nodeColor={(node) =>{
-        const t = 20;
-        if ( node.values[t] === 1 ){
+        //const t = 20;
+        if ( node.values[step] === 1 ){
           return "red"
-        }else if( node.values[t]  === 0){
+        }else if( node.values[step]  === 0){
           return "gray"
-        }else if( node.values[t] === -1){
+        }else if( node.values[step] === -1){
           return "blue"
         }
       }}
@@ -108,9 +146,25 @@ const LineChart = () => {
         link.target = link.target.toString();//data.nodes[link.target].id
         link.distance = 20;
       }
+      
+      
       setData(data)
     })
   },[]) 
+
+  //新規作成部分
+  const [Linestep, setCount] = useState(step);
+  const handleInputChange = (event) => {
+    step= event.target.value
+  };
+  const handleButtonClick = () => {
+    if (step > 100){
+      alert(`stepは100以下の値を入力してください!`);
+    }else{
+    setCount( step );
+    }
+  };
+  //ここまで
 
   const newLinks = data.links.filter(function(item,index){   
     if(item.weight >=5){
@@ -131,27 +185,28 @@ const LineChart = () => {
   const newNodes = data.nodes.filter(check)
 
   //ここからLineChart用のデータの作成
-  const step=50
+
+
   const LineNodes = newNodes
   //各ステップごとの-1,0,1の数を数えるcountの作成し０で初期化
-  var count = { minus: {}, non: {},plus:{} }
+  var count = { Negative: {}, Neutral: {},Positive:{} }
   for (var d = 0; d < step; d++) {
-    count.minus[d] = 0;
-    count.non[d] = 0;
-    count.plus[d]= 0;
+    count.Negative[d] = 0;
+    count.Neutral[d] = 0;
+    count.Positive[d]= 0;
   }
   //countに対して、実際に-1,0,1の数を数えて代入
   const valueset= Array.from(new Set(LineNodes.map(({ values }) => values)));
   for (var v =0; v < step; v++) {
     for(const j of valueset){
       if (j[v] === -1) {
-        count.minus[v] += 1;
+        count.Negative[v] += 1;
        // console.log("minus+")
       } else if(j[v] === 0){
-        count.non[v] += 1;
+        count.Neutral[v] += 1;
         //console.log("non+")
       }else  if(j[v] === 1){
-        count.plus[v] += 1;
+        count.Positive[v] += 1;
         //console.log("plus+")
       }
     }
@@ -163,17 +218,17 @@ var num=1.0;
    for(var j=0; j<step; j++){
      num=1.0;
      if(i===0){
-      num = count.minus[j]/ LineNodes.length * 100
-      count.minus[j] = Math.round(num * 10) / 10
-      console.log("minus::"+ count.minus[j])
+      num = count.Negative[j]/ LineNodes.length * 100
+      count.Negative[j] = Math.round(num * 10) / 10
+      //console.log("minus::"+ count.Negative[j])
      }else if(i===1){
-      num = count.non[j]/ LineNodes.length * 100
-      count.non[j] = Math.round(num * 10) / 10
-      console.log("non::"+count.non[j])
+      num = count.Neutral[j]/ LineNodes.length * 100
+      count.Neutral[j] = Math.round(num * 10) / 10
+      //console.log("non::"+count.Neutral[j])
      }else{
-      num = count.plus[j]/ LineNodes.length * 100
-      count.plus[j] = Math.round(num * 10) / 10
-      console.log("plus::"+count.plus[j])
+      num = count.Positive[j]/ LineNodes.length * 100
+      count.Positive[j] = Math.round(num * 10) / 10
+     // console.log("plus::"+count.Positive[j])
      }
    }
  }
@@ -197,13 +252,22 @@ const alldata=[]
 }
 const result = (dataset(alldata))
 console.log(result)
+
 return (
+  //新規追加部分
   <div style={ {"width": "1000px", "height" : "500px"}} >
-    <ResponsiveLine        
+
+      <input type="text" onChange = { handleInputChange }/>
+      <button onClick= {handleButtonClick} > 
+        ステップ数を変更する！
+      </button>
+      <p>現在のステップ数　{Linestep }</p>
+    <ResponsiveLine
+            
       data={result}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
-      yScale={{ type: 'linear', min: 0, max: 100, stacked: true, reverse: false }}
+      yScale={{ type: 'linear', min: 0, max: 100, stacked: false, reverse: false }}
       axisTop={null}
       axisRight={null}
       axisBottom={{
@@ -211,7 +275,7 @@ return (
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'transportation',
+          legend: 'TimeStep',
           legendOffset: 36,
           legendPosition: 'middle'
       }}
@@ -220,11 +284,19 @@ return (
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'count',
+          legend: 'ratio',
           legendOffset: -40,
           legendPosition: 'middle'
       }}
-     colors={{ scheme: 'nivo' }}
+     colors={(data) =>{
+      if ( data.id === "Negative"){
+        return "blue"
+      }else if( data.id  === "Neutral"){
+        return "gray"
+      }else {
+        return "red"
+      }
+    }}
       pointSize={10}
       pointColor={{ theme: 'background' }}
       pointBorderWidth={2}
@@ -269,10 +341,8 @@ const App = () => {
   return(
     <div>
       <NetworkChart/>  
-      
       <LineChart/>
       
-       
     </div>
   )
 }
