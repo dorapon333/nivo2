@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { ResponsiveNetwork } from '@nivo/network'
 import { ResponsiveLine } from '@nivo/line'
 
- var step = 30;
+ //var step = 30;
 
   /*const CheckBox = () =>{
   const [count, setCount] = useState(step);
@@ -30,7 +30,8 @@ import { ResponsiveLine } from '@nivo/line'
 
 
 //ネットワーク図
-const NetworkChart = () => {
+const NetworkChart = (props) => {
+  const step = props.step 
   const [data, setData] = useState({nodes : [], links: []})
   useEffect(() => {
     window
@@ -89,6 +90,7 @@ const NetworkChart = () => {
   
 return (
   <div style={ {"width": "1000px", "height" : "1000px"}} >
+
     <ResponsiveNetwork        
       nodes={newNodes}    
       links={newLinks}
@@ -128,8 +130,8 @@ return (
 
 
 //折れ線グラフ
-const LineChart = () => {
-
+const LineChart = (props) => {
+  const step = props.step 
   const [data, setData] = useState({nodes : [], links: []})
   useEffect(() => {
     window
@@ -153,17 +155,7 @@ const LineChart = () => {
   },[]) 
 
   //新規作成部分
-  const [Linestep, setCount] = useState(step);
-  const handleInputChange = (event) => {
-    step= event.target.value
-  };
-  const handleButtonClick = () => {
-    if (step > 100){
-      alert(`stepは100以下の値を入力してください!`);
-    }else{
-    setCount( step );
-    }
-  };
+
   //ここまで
 
   const newLinks = data.links.filter(function(item,index){   
@@ -256,12 +248,6 @@ console.log(result)
 return (
   //新規追加部分
   <div style={ {"width": "1000px", "height" : "500px"}} >
-
-      <input type="text" onChange = { handleInputChange }/>
-      <button onClick= {handleButtonClick} > 
-        ステップ数を変更する！
-      </button>
-      <p>現在のステップ数　{Linestep }</p>
     <ResponsiveLine
             
       data={result}
@@ -338,10 +324,23 @@ return (
 
 
 const App = () => {
+  const [step, setStep] = useState(20);
+  const handleSubmit = (event) =>{
+    event.preventDefault()
+    setStep(+event.target.elements.step.value)
+  }
   return(
     <div>
-      <NetworkChart/>  
-      <LineChart/>
+      <form  onSubmit = {handleSubmit}>
+      <input  name = "step" type="number"  defaultValue = {step}/>
+      <button type = "submit"> 
+        ステップ数を変更する！
+      </button>
+      </form>
+      
+      <p>現在のステップ数　{step}</p>
+      <NetworkChart   step = {step}/>  
+      <LineChart      step = {step}/>
       
     </div>
   )
