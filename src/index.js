@@ -3,91 +3,12 @@ import { render } from 'react-dom'
 import { ResponsiveNetwork } from '@nivo/network'
 import { ResponsiveLine } from '@nivo/line'
 
- //var step = 30;
-
-  /*const CheckBox = () =>{
-  const [count, setCount] = useState(step);
-  const handleInputChange = (event) => {
-    step= event.target.value
-  };
-  const handleButtonClick = () => {
-    if (step > 100){
-      alert(`stepは100以下の値を入力してください!`);
-    }else{
-    setCount( step );
-    }
-  };
-  return (
-    <div>
-      <input type="text" onChange = {handleInputChange}/>
-      <button onClick= {handleButtonClick} > 
-        ステップ数を変更する！
-      </button>
-      <p>現在のステップ数{ count }</p>
-    </div>
-  );
-};*/
-
-
 //ネットワーク図
 const NetworkChart = (props) => {
+  
   const step = props.step 
-  const [data, setData] = useState({nodes : [], links: []})
-  useEffect(() => {
-    window
-    .fetch('all.json')
-    .then((response) => response.json())
-    .then((data) =>{
-      for (const node of data.nodes) {
-        node.id = node.id.toString();
-        node.radius = 5;      
-      }
-      for (const link of data.links ){
-        link.color = "gray";  
-        link.source = link.source.toString();//data.nodes[link.source].id
-        link.target = link.target.toString();//data.nodes[link.target].id
-        link.distance = 20;
-      }
-      setData(data)
-    })
-  },[]) 
-   //新規作成部分
-   /*const [count, setCount] = useState(step);
-   const handleInputChange = (event) => {
-     step= event.target.value
-   };
-   const handleButtonClick = () => {
-     if (step > 100){
-       alert(`stepは100以下の値を入力してください!`);
-     }else{
-     setCount( step );
-     }
-   };*/
-   //ここまで
-
-
-  const newLinks = data.links.filter(function(item,index){   
-    if(item.weight >=5){
-      return true;
-    }else{
-      return false;
-    }
-  });  
-
- function check(value){
-   for(const links of newLinks){
-     if(  (value.id === links.source) || (value.id === links.target)){  
-       return value
-      }
-    }
-  }
-  
-  const newNodes = data.nodes.filter(check)
-
-  
-  //console.log("これはNewWorkChartで使用するnewNodesの出力です");
-  //console.log(newNodes)
-  
+  const newNodes=props.newNodes
+  const newLinks=props.newLinks
 return (
   <div style={ {"width": "1000px", "height" : "1000px"}} >
 
@@ -98,7 +19,6 @@ return (
       repulsivity={3}
       iterations={50}
       nodeColor={(node) =>{
-        //const t = 20;
         if ( node.values[step] === 1 ){
           return "red"
         }else if( node.values[step]  === 0){
@@ -131,52 +51,8 @@ return (
 
 //折れ線グラフ
 const LineChart = (props) => {
-  const step = props.step 
-  const [data, setData] = useState({nodes : [], links: []})
-  useEffect(() => {
-    window
-    .fetch('all.json')
-    .then((response) => response.json())
-    .then((data) =>{
-      for (const node of data.nodes) {
-        node.id = node.id.toString();
-        node.radius = 5;      
-      }
-      for (const link of data.links ){
-        link.color = "gray";  
-        link.source = link.source.toString();//data.nodes[link.source].id
-        link.target = link.target.toString();//data.nodes[link.target].id
-        link.distance = 20;
-      }
-      
-      
-      setData(data)
-    })
-  },[]) 
-
-  //新規作成部分
-
-  //ここまで
-
-  const newLinks = data.links.filter(function(item,index){   
-    if(item.weight >=5){
-      return true;
-    }else{
-      return false;
-    }
-  });  
-
- function check(value){
-   for(const links of newLinks){
-     if(  (value.id === links.source) || (value.id === links.target)){  
-       return value
-      }
-    }
-  }
-  
-  const newNodes = data.nodes.filter(check)
-
-  //ここからLineChart用のデータの作成
+  const step = 50//props.step 
+  const newNodes=props.newNodes
 
 
   const LineNodes = newNodes
@@ -193,13 +69,10 @@ const LineChart = (props) => {
     for(const j of valueset){
       if (j[v] === -1) {
         count.Negative[v] += 1;
-       // console.log("minus+")
       } else if(j[v] === 0){
         count.Neutral[v] += 1;
-        //console.log("non+")
       }else  if(j[v] === 1){
         count.Positive[v] += 1;
-        //console.log("plus+")
       }
     }
  }
@@ -212,15 +85,12 @@ var num=1.0;
      if(i===0){
       num = count.Negative[j]/ LineNodes.length * 100
       count.Negative[j] = Math.round(num * 10) / 10
-      //console.log("minus::"+ count.Negative[j])
      }else if(i===1){
       num = count.Neutral[j]/ LineNodes.length * 100
       count.Neutral[j] = Math.round(num * 10) / 10
-      //console.log("non::"+count.Neutral[j])
      }else{
       num = count.Positive[j]/ LineNodes.length * 100
       count.Positive[j] = Math.round(num * 10) / 10
-     // console.log("plus::"+count.Positive[j])
      }
    }
  }
@@ -232,7 +102,6 @@ const alldata=[]
     var stepcount=0;
     return {
       id: key,
-     // color: "gray",
       data: Object.values(values).map((d) => {
         return {
           x: stepcount++,
@@ -243,10 +112,9 @@ const alldata=[]
   });
 }
 const result = (dataset(alldata))
-console.log(result)
+//console.log(result)
 
 return (
-  //新規追加部分
   <div style={ {"width": "1000px", "height" : "500px"}} >
     <ResponsiveLine
             
@@ -329,20 +197,182 @@ const App = () => {
     event.preventDefault()
     setStep(+event.target.elements.step.value)
   }
+
+//data set
+  const [data, setData] = useState({nodes : [], links: []})
+  useEffect(() => {
+    window
+    .fetch('all.json')
+    .then((response) => response.json())
+    .then((data) =>{
+      for (const node of data.nodes) {
+        node.id = node.id.toString();
+        node.radius = 5;      
+      }
+      for (const link of data.links ){
+        link.color = "gray";  
+        link.source = link.source.toString();
+        link.target = link.target.toString();
+        link.distance = 20;
+      }
+      setData(data)
+    })
+  },[]) 
+   
+  const newLinks = data.links.filter(function(item,index){   
+    if(item.weight >=5){
+      return true;
+    }else{
+      return false;
+    }
+  });  
+
+ function check(value){
+   for(const links of newLinks){
+     if(  (value.id === links.source) || (value.id === links.target)){  
+       return value
+      }
+    }
+  }
+  
+  const newNodes = data.nodes.filter(check)
+
+  //次数について
+  function Degcount(value){
+    var Degc = 0;
+    for(const links of newLinks){
+      if(  (value.id === links.source) || (value.id === links.target)){  
+        Degc++;
+      }
+    }
+    if(Degc > 1){
+      value.Degree= Degc
+      return value
+    }
+  }
+  var DegNodes = []
+  DegNodes = newNodes.filter(Degcount)
+  console.log(DegNodes.value)
+  DegNodes.sort(
+    function(a,b){
+      return (
+        a.Degree > b.Degree ? -1 : 1
+      );
+    }
+  );
+  DegNodes.slice(0,99)
+  console.log(DegNodes)
+  
+
+
+
   return(
+  
+     
     <div>
-      <form  onSubmit = {handleSubmit}>
-      <input  name = "step" type="number"  defaultValue = {step}/>
-      <button type = "submit"> 
-        ステップ数を変更する！
-      </button>
-      </form>
-      
-      <p>現在のステップ数　{step}</p>
-      <NetworkChart   step = {step}/>  
-      <LineChart      step = {step}/>
-      
+      <head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"></link></head>
+
+
+{/*配置　途中*/} 
+      <div class="tile is-ancestor">
+        <div class="tile is-vertical is-3">     
+          <div class="tile">
+            <div class="tile is-parent is-vertical">
+              <article class="tile is-child box">
+                <p className="title">Positive</p>
+                <p className="subtitle">プルダウンメニュー作成</p>
+
+                <div className="control">
+                  <div className="select">
+                    <select>
+                      <option>Select dropdown</option>
+                      <option>With options</option>
+                    </select>
+                  </div>
+                </div>
+              </article>
+
+              <article class="tile is-child box">
+                <p className="title">Negative</p>
+                <p className="subtitle">プルダウンメニュー作成</p>
+                
+                <div className="control">
+                  <div className="select">
+                    <select>
+                      <option>Select dropdown</option>
+                      <option>With options</option>
+                    </select>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+
+          <div class="tile">
+            <div class="tile is-parent is-vertical">
+
+              <article class="tile is-child box">
+                <p className="title">Step</p>
+                <p className="subtitle">step設定</p>
+                {/*ステップ数更新作成*/}
+                <form  onSubmit = {handleSubmit}>
+                  <input  name = "step" type="number"  defaultValue = {step}/>
+                  <button type = "submit"> 
+                    ステップ数を変更する！
+                  </button>
+                </form>
+                <p>現在のステップ数　{step}</p>
+              </article>
+
+              <article class="tile is-child box">
+                <p className="title">Model</p>
+                <p className="subtitle">出力するモデルを選択（？）</p>
+                {/*選択肢ボタン作成*/} 
+                <button className="button">ネットワーク</button>
+                <button className="button">折れ線グラフ</button>
+                <button className="button">ネットワーク・折れ線グラフ</button>
+              </article>
+
+            </div>
+          </div>
+
+          <div className="tile">
+            <div className="tile is-parent is-vertical">
+              <article className="tile is-child box">
+                <p className="title">Start</p>
+                <p className="subtitle">Startボタン作成</p>          
+                <button className="button is-danger is-active">Start
+                </button> 
+                  <div className="content">
+                  <p>スタートボタンを押すと右の図に反映されます</p>
+                  </div>
+              </article>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="tile is-parent">
+          <div class="tile">
+            <article class="tile is-parent is-vertical">
+            
+                <p class="title">ネットワーク</p>
+                <p  class="subtitle">コメント</p>
+                <NetworkChart     step = {step} newNodes = {newNodes} newLinks = {newLinks}/>  
+            
+            </article>
+            <article class="tile is-child is-vertical">
+                <p class="title">折れ線グラフ</p>
+                <p  class="subtitle">コメント</p>
+                <LineChart   step = {step} newNodes = {newNodes} newLinks = {newLinks}/>   
+            </article>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 render(<App />, document.querySelector('#content'))
+
