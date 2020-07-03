@@ -274,11 +274,11 @@ const App = () => {
 
 
 {/*配置　途中*/} 
-      <div class="tile is-ancestor">
-        <div class="tile is-vertical is-3">     
-          <div class="tile">
-            <div class="tile is-parent is-vertical">
-              <article class="tile is-child box">
+      <div className="tile is-ancestor">
+        <div className="tile is-vertical is-3">     
+          <div className="tile">
+            <div className="tile is-parent is-vertical">
+              <article className="tile is-child box">
                 <p className="title">Positive</p>
                 <p className="subtitle">プルダウンメニュー作成</p>
 
@@ -292,7 +292,7 @@ const App = () => {
                 </div>
               </article>
 
-              <article class="tile is-child box">
+              <article className="tile is-child box">
                 <p className="title">Negative</p>
                 <p className="subtitle">プルダウンメニュー作成</p>
                 
@@ -309,10 +309,10 @@ const App = () => {
             </div>
           </div>
 
-          <div class="tile">
-            <div class="tile is-parent is-vertical">
+          <div className="tile">
+            <div className="tile is-parent is-vertical">
 
-              <article class="tile is-child box">
+              <article className="tile is-child box">
                 <p className="title">Step</p>
                 <p className="subtitle">step設定</p>
                 {/*ステップ数更新作成*/}
@@ -325,7 +325,7 @@ const App = () => {
                 <p>現在のステップ数　{step}</p>
               </article>
 
-              <article class="tile is-child box">
+              <article className="tile is-child box">
                 <p className="title">Model</p>
                 <p className="subtitle">出力するモデルを選択（？）</p>
                 {/*選択肢ボタン作成*/} 
@@ -354,18 +354,18 @@ const App = () => {
         </div>
 
 
-        <div class="tile is-parent">
-          <div class="tile">
-            <article class="tile is-parent is-vertical">
+        <div className="tile is-parent">
+          <div className="tile">
+            <article className="tile is-parent is-vertical">
             
-                <p class="title">ネットワーク</p>
-                <p  class="subtitle">コメント</p>
+                <p className="title">ネットワーク</p>
+                <p  className="subtitle">コメント</p>
                 <NetworkChart     step = {step} newNodes = {newNodes} newLinks = {newLinks}/>  
             
             </article>
-            <article class="tile is-child is-vertical">
-                <p class="title">折れ線グラフ</p>
-                <p  class="subtitle">コメント</p>
+            <article className="tile is-child is-vertical">
+                <p className="title">折れ線グラフ</p>
+                <p  className="subtitle">コメント</p>
                 <LineChart   step = {step} newNodes = {newNodes} newLinks = {newLinks}/>   
             </article>
           </div>
