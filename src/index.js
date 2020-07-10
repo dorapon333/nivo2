@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import { ResponsiveNetwork } from '@nivo/network'
 import { ResponsiveLine } from '@nivo/line'
 
+
 //ネットワーク図
 const NetworkChart = (props) => {
   
@@ -251,7 +252,7 @@ const App = () => {
     }
   }
   var DegNodes = []
-  DegNodes = newNodes.filter(Degcount)
+  DegNodes = data.nodes.filter(Degcount)
   console.log(DegNodes.value)
   DegNodes.sort(
     function(a,b){
@@ -262,6 +263,9 @@ const App = () => {
   );
   DegNodes.slice(0,99)
   console.log(DegNodes)
+  const options = DegNodes.map(value => {
+    return <option value={value.name}>{value.name}</option>;  
+  });
   
 
 
@@ -285,8 +289,7 @@ const App = () => {
                 <div className="control">
                   <div className="select">
                     <select>
-                      <option>Select dropdown</option>
-                      <option>With options</option>
+                      {options}
                     </select>
                   </div>
                 </div>
@@ -299,8 +302,7 @@ const App = () => {
                 <div className="control">
                   <div className="select">
                     <select>
-                      <option>Select dropdown</option>
-                      <option>With options</option>
+                      {options}
                     </select>
                   </div>
                 </div>
@@ -360,6 +362,14 @@ const App = () => {
             
                 <p className="title">ネットワーク</p>
                 <p  className="subtitle">コメント</p>
+                {/*ステップ数更新作成*/}
+                <form  onSubmit = {handleSubmit}>
+                  <input  name = "step" type="number"  defaultValue = {step}/>
+                  <button type = "submit"> 
+                    ステップ数を変更する！
+                  </button>
+                </form>
+                <p>現在のステップ数　{step}</p>
                 <NetworkChart     step = {step} newNodes = {newNodes} newLinks = {newLinks}/>  
             
             </article>
@@ -375,4 +385,3 @@ const App = () => {
   )
 }
 render(<App />, document.querySelector('#content'))
-
