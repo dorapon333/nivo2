@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useRef} from 'react'
 import { render } from 'react-dom'
 import { ResponsiveNetwork } from '@nivo/network'
 import { ResponsiveLine } from '@nivo/line'
@@ -192,8 +192,12 @@ return (
 
 
 
+//左側コンポーネント
 const App = () => {
+  const PositiveEl = useRef(null);
+  const NegativeEl = useRef(null);
   const [step, setStep] = useState(20);
+  
   const handleSubmit = (event) =>{
     event.preventDefault()
     setStep(+event.target.elements.step.value)
@@ -222,15 +226,15 @@ const App = () => {
    
   const newLinks = data.links.filter(function(item,index){   
     if(item.weight >=5){
-      return true;
+      return true
     }else{
-      return false;
+      return false
     }
   });  
 
  function check(value){
    for(const links of newLinks){
-     if(  (value.id === links.source) || (value.id === links.target)){  
+     if( (value.id === links.source) || (value.id === links.target) ){  
        return value
       }
     }
@@ -253,7 +257,7 @@ const App = () => {
   }
   var DegNodes = []
   DegNodes = data.nodes.filter(Degcount)
-  console.log(DegNodes.value)
+  //console.log(DegNodes.value)
   DegNodes.sort(
     function(a,b){
       return (
@@ -263,12 +267,73 @@ const App = () => {
   );
   DegNodes.slice(0,99)
   console.log(DegNodes)
+
   const options = DegNodes.map(value => {
-    return <option value={value.name}>{value.name}</option>;  
+    return( 
+      <option value={value.id}>
+        {value.name}
+      </option>
+    );  
   });
+
   
+ //onClick時　選択されたidを取得
 
+ const clickButton = () => {
+  handleClickEvent(DegNodes);
+};
 
+  const handleClickEvent =() =>{
+    var PositiveIds=[]
+    for (const option of PositiveEl.current.options){
+      if(option.selected === true){
+          PositiveIds.push(option.value)
+      }
+    }
+    console.log(PositiveIds)
+    var NegativeIds=[]
+    for (const option of NegativeEl.current.options){
+      if(option.selected === true){
+          NegativeIds.push(option.value)
+      }
+    }
+    console.log(NegativeIds)
+
+  for(const nodes of DegNodes){
+      for(const PIds of PositiveIds){
+        if( PIds === nodes.id ){
+          nodes.values[0]=1;
+        }
+      }
+      for(const NIds of NegativeIds){
+        if( NIds === nodes.id){
+          nodes.values[0]=-1;
+        }
+      }
+    }
+
+  }
+
+    //多数決
+    /*
+    var cntPojitive = 0;
+    var cntNegative = 0;
+    var cntOther = 0;
+    for(const data of selectEl.current.options){
+      if(data.selected === true){
+        
+        if ( data.values[step] === 1 ){
+          
+        }else if( data.values[step]  === -1){
+          
+        }else if( data.values[step] === 0){
+    
+        }
+      }
+    }*/
+      
+
+  //ここまで
 
   return(
   
@@ -277,31 +342,33 @@ const App = () => {
       <head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"></link></head>
 
 
-{/*配置　途中*/} 
+      {/*配置*/} 
       <div className="tile is-ancestor">
         <div className="tile is-vertical is-3">     
           <div className="tile">
             <div className="tile is-parent is-vertical">
               <article className="tile is-child box">
                 <p className="title">Positive</p>
-                <p className="subtitle">プルダウンメニュー作成</p>
+                <p className="subtitle">Ctrlで複数選択可能</p>
 
                 <div className="control">
-                  <div className="select">
-                    <select>
+                  <div className="select is-multiple">
+                    
+                    <select multiple  ref={PositiveEl} >
                       {options}
                     </select>
+
                   </div>
                 </div>
               </article>
 
               <article className="tile is-child box">
                 <p className="title">Negative</p>
-                <p className="subtitle">プルダウンメニュー作成</p>
+                <p className="subtitle">Ctrlで複数選択可能</p>
                 
                 <div className="control">
-                  <div className="select">
-                    <select>
+                  <div className="select is-multiple">
+                    <select　 multiple 　 ref={NegativeEl} >
                       {options}
                     </select>
                   </div>
@@ -311,20 +378,19 @@ const App = () => {
             </div>
           </div>
 
+          {/*シミュレーションstep作成*/}
           <div className="tile">
             <div className="tile is-parent is-vertical">
 
               <article className="tile is-child box">
                 <p className="title">Step</p>
                 <p className="subtitle">step設定</p>
-                {/*ステップ数更新作成*/}
-                <form  onSubmit = {handleSubmit}>
+                <form>
+                  {/*ここも少し変えた*/}
                   <input  name = "step" type="number"  defaultValue = {step}/>
-                  <button type = "submit"> 
-                    ステップ数を変更する！
-                  </button>
                 </form>
-                <p>現在のステップ数　{step}</p>
+               <p>{step}stepまでシミュレーションを行う</p>
+                
               </article>
 
               <article className="tile is-child box">
@@ -339,16 +405,16 @@ const App = () => {
             </div>
           </div>
 
+          {/*スタートボタン*/} 
           <div className="tile">
             <div className="tile is-parent is-vertical">
               <article className="tile is-child box">
                 <p className="title">Start</p>
-                <p className="subtitle">Startボタン作成</p>          
-                <button className="button is-danger is-active">Start
+                <p className="subtitle">Startボタンを押すとシミュレーションを開始します</p>          
+                <button className="button is-danger is-active"  onClick = {clickButton}>
+                  Start
                 </button> 
-                  <div className="content">
-                  <p>スタートボタンを押すと右の図に反映されます</p>
-                  </div>
+                
               </article>
             </div>
           </div>
@@ -360,23 +426,23 @@ const App = () => {
           <div className="tile">
             <article className="tile is-parent is-vertical">
             
-                <p className="title">ネットワーク</p>
-                <p  className="subtitle">コメント</p>
-                {/*ステップ数更新作成*/}
-                <form  onSubmit = {handleSubmit}>
-                  <input  name = "step" type="number"  defaultValue = {step}/>
-                  <button type = "submit"> 
-                    ステップ数を変更する！
-                  </button>
-                </form>
-                <p>現在のステップ数　{step}</p>
-                <NetworkChart     step = {step} newNodes = {newNodes} newLinks = {newLinks}/>  
+              <p className="title">ネットワーク</p>
+              <p  className="subtitle">コメント</p>
+              {/*ステップ数更新作成*/}
+              <form  onSubmit = {handleSubmit}>
+                <input  name = "step" type="number"  defaultValue = {step}/>
+                <button type = "submit"> 
+                  ステップ数を変更する！
+                </button>
+              </form>
+              <p>現在のステップ数　{step}</p>
+              <NetworkChart     step = {step}  newNodes = {newNodes} newLinks = {newLinks}/>  
             
             </article>
             <article className="tile is-child is-vertical">
-                <p className="title">折れ線グラフ</p>
-                <p  className="subtitle">コメント</p>
-                <LineChart   step = {step} newNodes = {newNodes} newLinks = {newLinks}/>   
+              <p className="title">折れ線グラフ</p>
+              <p  className="subtitle">コメント</p>
+              <LineChart   step = {step} newNodes = {newNodes} newLinks = {newLinks}/>   
             </article>
           </div>
         </div>
