@@ -25,26 +25,28 @@ export const simulation = (graph, positiveIds, negativeIds, step) => {
     adjacencyLists[link.target].push(link.source);
   }
   //step数まで行う
+  const nodes = {};
+  for (const node of graph.nodes) {
+    nodes[node.id] = node;
+  }
+  console.log(graph.nodes.length);
   for (let i = 1; i <= step; i++) {
-    let count = 0;
     for (const node of graph.nodes) {
+      let count = 0;
       for (const id of adjacencyLists[node.id]) {
-        for (const node2 of graph.nodes) {
-          if (id === node2.id) {
-            if (node2.values[i] === 1) {
-              count += 1;
-            } else if (node2.values[i] === -1) {
-              count -= 1;
-            }
-          }
+        const node2 = nodes[id];
+        if (node2.values[i - 1] === 1) {
+          count += 1;
+        } else if (node2.values[i - 1] === -1) {
+          count -= 1;
         }
       }
       if (count > 0) {
-        node[i] = 1;
+        node.values[i] = 1;
       } else if (count < 0) {
-        node[i] = -1;
+        node.values[i] = -1;
       } else {
-        node[i] = 0;
+        node.values[i] = 0;
       }
     }
   }
