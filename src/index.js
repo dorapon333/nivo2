@@ -43,7 +43,7 @@ const NetworkChart = (props) => {
 
 //折れ線グラフ
 const LineChart = (props) => {
-  const step = 50; //props.step
+  const step = props.step;
   const newNodes = props.newNodes;
 
   const LineNodes = newNodes;
@@ -187,9 +187,9 @@ const LineChart = (props) => {
 
 //左側コンポーネント
 const App = () => {
-  const PositiveEl = useRef(null);
-  const NegativeEl = useRef(null);
-  const [step, setStep] = useState(20);
+  const positiveEl = useRef(null);
+  const negativeEl = useRef(null);
+  const [step, setStep] = useState(50);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -254,7 +254,6 @@ const App = () => {
     return a.Degree > b.Degree ? -1 : 1;
   });
   DegNodes.slice(0, 99);
-  console.log(DegNodes);
 
   const options = DegNodes.map((value) => {
     return <option value={value.id}>{value.name}</option>;
@@ -267,22 +266,20 @@ const App = () => {
   };
 
   const handleClickEvent = () => {
-    var PositiveIds = [];
-    for (const option of PositiveEl.current.options) {
+    var positiveIds = [];
+    for (const option of positiveEl.current.options) {
       if (option.selected === true) {
-        PositiveIds.push(option.value);
+        positiveIds.push(option.value);
       }
     }
-    console.log(PositiveIds);
-    var NegativeIds = [];
-    for (const option of NegativeEl.current.options) {
+    var negativeIds = [];
+    for (const option of negativeEl.current.options) {
       if (option.selected === true) {
-        NegativeIds.push(option.value);
+        negativeIds.push(option.value);
       }
     }
-    console.log(NegativeIds);
 
-    simulation(data, PositiveIds, NegativeIds, 50);
+    simulation(data, positiveIds, negativeIds, 50);
   };
 
   return (
@@ -305,7 +302,7 @@ const App = () => {
 
                 <div className="control">
                   <div className="select is-multiple">
-                    <select multiple ref={PositiveEl}>
+                    <select multiple ref={positiveEl}>
                       {options}
                     </select>
                   </div>
@@ -318,7 +315,7 @@ const App = () => {
 
                 <div className="control">
                   <div className="select is-multiple">
-                    <select multiple ref={NegativeEl}>
+                    <select multiple ref={negativeEl}>
                       {options}
                     </select>
                   </div>
