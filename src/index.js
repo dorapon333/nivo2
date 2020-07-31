@@ -291,8 +291,8 @@ const App = () => {
         negativeIds.push(option.value);
       }
     }
-    console.log("simulationに渡すパーセントは" + percent);
-    simulation(data, positiveIds, negativeIds, percent, 50);
+    const newData = simulation(data, positiveIds, negativeIds, percent, 50);
+    setData(newData);
   };
 
   return (
