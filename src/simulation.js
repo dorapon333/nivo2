@@ -1,4 +1,4 @@
-export const simulation = (graph, positiveIds, negativeIds, step) => {
+export const simulation = (graph, positiveIds, negativeIds, percent, step) => {
   for (const node of graph.nodes) {
     node.values[0] = 0;
   }
@@ -29,16 +29,23 @@ export const simulation = (graph, positiveIds, negativeIds, step) => {
   for (const node of graph.nodes) {
     nodes[node.id] = node;
   }
-  console.log(graph.nodes.length);
+  let remainPercent = 100 - percent; //残りの割合
+  console.log(
+    "受け取った割合は" + percent + "で　残りの割合は" + remainPercent
+  );
+
   for (let i = 1; i <= step; i++) {
     for (const node of graph.nodes) {
       let count = 0;
+      let links = adjacencyLists[node.id].length;
+      count += (node.values[i - 1] / links) * percent;
       for (const id of adjacencyLists[node.id]) {
         const node2 = nodes[id];
+        let calc = remainPercent / id.length;
         if (node2.values[i - 1] === 1) {
-          count += 1;
+          count += 1 * calc;
         } else if (node2.values[i - 1] === -1) {
-          count -= 1;
+          count -= 1 * calc;
         }
       }
       if (count > 0) {
