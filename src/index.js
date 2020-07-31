@@ -43,7 +43,7 @@ const NetworkChart = (props) => {
 
 //折れ線グラフ
 const LineChart = (props) => {
-  const step = props.step;
+  const step = 50;
   const newNodes = props.newNodes;
 
   const LineNodes = newNodes;
@@ -187,8 +187,9 @@ const LineChart = (props) => {
 
 //左側コンポーネント
 const App = () => {
-  const positiveEl = useRef(null);
-  const negativeEl = useRef(null);
+  let positiveEl = useRef(null);
+  let negativeEl = useRef(null);
+  let percentEl = useRef(null);
   const [step, setStep] = useState(50);
 
   const handleSubmit = (event) => {
@@ -258,6 +259,10 @@ const App = () => {
   const options = DegNodes.map((value) => {
     return <option value={value.id}>{value.name}</option>;
   });
+  const percents = [0, 25, 50, 75, 100];
+  const perOptions = percents.map((value) => {
+    return <option value={value}>{value}</option>;
+  });
 
   //onClick時　選択されたidを取得
 
@@ -266,7 +271,15 @@ const App = () => {
   };
 
   const handleClickEvent = () => {
+    var percent;
+    for (const option of percentEl.current.options) {
+      if (option.selected === true) {
+        percent = option.value;
+      }
+    }
+    console.log(percent);
     var positiveIds = [];
+
     for (const option of positiveEl.current.options) {
       if (option.selected === true) {
         positiveIds.push(option.value);
@@ -278,8 +291,8 @@ const App = () => {
         negativeIds.push(option.value);
       }
     }
-
-    simulation(data, positiveIds, negativeIds, 50);
+    console.log("simulationに渡すパーセントは" + percent);
+    simulation(data, positiveIds, negativeIds, percent, 50);
   };
 
   return (
@@ -338,12 +351,10 @@ const App = () => {
               </article>
 
               <article className="tile is-child box">
-                <p className="title">Model</p>
-                <p className="subtitle">出力するモデルを選択（？）</p>
                 {/*選択肢ボタン作成*/}
-                <button className="button">ネットワーク</button>
-                <button className="button">折れ線グラフ</button>
-                <button className="button">ネットワーク・折れ線グラフ</button>
+                <p className="title">ルール１：投票Model</p>
+                <p className="subtitle">自分の意思を0~100%の割合で反映します</p>
+                <select ref={percentEl}>{perOptions}</select>
               </article>
             </div>
           </div>
