@@ -30,18 +30,15 @@ export const simulation = (graph, positiveIds, negativeIds, percent, step) => {
     nodes[node.id] = node;
   }
   let remainPercent = 100 - percent; //残りの割合
-  console.log(
-    "受け取った割合は" + percent + "で　残りの割合は" + remainPercent
-  );
 
   for (let i = 1; i <= step; i++) {
     for (const node of graph.nodes) {
       let count = 0;
       let links = adjacencyLists[node.id].length;
-      count += (node.values[i - 1] / links) * percent;
+      count += (node.values[i - 1] / (links + 1)) * percent;
       for (const id of adjacencyLists[node.id]) {
         const node2 = nodes[id];
-        let calc = remainPercent / id.length;
+        let calc = remainPercent / (links + 1);
         if (node2.values[i - 1] === 1) {
           count += 1 * calc;
         } else if (node2.values[i - 1] === -1) {
@@ -57,4 +54,6 @@ export const simulation = (graph, positiveIds, negativeIds, percent, step) => {
       }
     }
   }
+
+  return Object.assign({}, graph);
 };
