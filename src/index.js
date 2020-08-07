@@ -3,6 +3,7 @@ import { render } from "react-dom";
 import { ResponsiveNetwork } from "@nivo/network";
 import { ResponsiveLine } from "@nivo/line";
 import { simulation } from "./simulation";
+import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 
 //ネットワーク図
 const NetworkChart = (props) => {
@@ -103,7 +104,6 @@ const LineChart = (props) => {
     });
   }
   const result = dataset(alldata);
-  //console.log(result)
 
   return (
     <div style={{ width: "1000px", height: "500px" }}>
@@ -174,6 +174,131 @@ const LineChart = (props) => {
                 on: "hover",
                 style: {
                   itemBackground: "rgba(0, 0, 0, .03)",
+                  itemOpacity: 1,
+                },
+              },
+            ],
+          },
+        ]}
+      />
+    </div>
+  );
+};
+
+//次数の分布
+const MyResponsiveScatterPlot = (props) => {
+  const step = props.step;
+  const newNodes = props.newNodes;
+  const LineNodes = newNodes;
+  //各ステップごとの-1,0,1の数を数えるcountの作成し０で初期化
+  var count = { Negative: {}, Neutral: {}, Positive: {} };
+  for (var d = 0; d < step; d++) {
+    count.Negative[d] = 0;
+    count.Neutral[d] = 0;
+    count.Positive[d] = 0;
+  }
+  //countに対して、実際に-1,0,1の数を数えて代入
+  const valueset = Array.from(new Set(LineNodes.map(({ values }) => values)));
+  for (var v = 0; v < step; v++) {
+    for (const j of valueset) {
+      if (j[v] === -1) {
+        count.Negative[v] += 1;
+      } else if (j[v] === 0) {
+        count.Neutral[v] += 1;
+      } else if (j[v] === 1) {
+        count.Positive[v] += 1;
+      }
+    }
+  }
+
+  //数えられたcountに対して、それを割合に変換する
+  var num = 1.0;
+  for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < step; j++) {
+      num = 1.0;
+      if (i === 0) {
+        num = (count.Negative[j] / LineNodes.length) * 100;
+        count.Negative[j] = Math.round(num * 10) / 10;
+      } else if (i === 1) {
+        num = (count.Neutral[j] / LineNodes.length) * 100;
+        count.Neutral[j] = Math.round(num * 10) / 10;
+      } else {
+        num = (count.Positive[j] / LineNodes.length) * 100;
+        count.Positive[j] = Math.round(num * 10) / 10;
+      }
+    }
+  }
+
+  //欲しいデータの形に作った配列等を代入する
+  const alldata = [];
+  function dataset() {
+    return Object.entries(count).map(([key, values]) => {
+      var stepcount = 0;
+      return {
+        id: key,
+        data: Object.values(values).map((d) => {
+          return {
+            x: stepcount++,
+            y: d,
+          };
+        }),
+      };
+    });
+  }
+  const result = dataset(alldata);
+  console.log(result);
+
+  return (
+    <div style={{ width: "1000px", height: "500px" }}>
+      <ResponsiveScatterPlot
+        data={result}
+        margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
+        xScale={{ type: "linear", min: 0, max: "auto" }}
+        xFormat={function (e) {
+          return e + " kg";
+        }}
+        yScale={{ type: "linear", min: 0, max: "auto" }}
+        yFormat={function (e) {
+          return e + " cm";
+        }}
+        blendMode="multiply"
+        axisTop={null}
+        axisRight={null}
+        axisBottom={{
+          orient: "bottom",
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "weight",
+          legendPosition: "middle",
+          legendOffset: 46,
+        }}
+        axisLeft={{
+          orient: "left",
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "size",
+          legendPosition: "middle",
+          legendOffset: -60,
+        }}
+        legends={[
+          {
+            anchor: "bottom-right",
+            direction: "column",
+            justify: false,
+            translateX: 130,
+            translateY: 0,
+            itemWidth: 100,
+            itemHeight: 12,
+            itemsSpacing: 5,
+            itemDirection: "left-to-right",
+            symbolSize: 12,
+            symbolShape: "circle",
+            effects: [
+              {
+                on: "hover",
+                style: {
                   itemOpacity: 1,
                 },
               },
@@ -344,7 +469,6 @@ const App = () => {
                 <p className="title">Step</p>
                 <p className="subtitle">step設定</p>
                 <form>
-                  {/*ここも少し変えた*/}
                   <input name="step" type="number" defaultValue={step} />
                 </form>
                 <p>{step}stepまでシミュレーションを行う</p>
@@ -399,6 +523,13 @@ const App = () => {
               <p className="title">折れ線グラフ</p>
               <p className="subtitle">コメント</p>
               <LineChart step={step} newNodes={newNodes} newLinks={newLinks} />
+              <p className="title">次数の分布</p>
+
+              <MyResponsiveScatterPlot
+                step={step}
+                newNodes={newNodes}
+                newLinks={newLinks}
+              />
             </article>
           </div>
         </div>
