@@ -4,6 +4,7 @@ import { ResponsiveNetwork } from "@nivo/network";
 import { ResponsiveLine } from "@nivo/line";
 import { simulation } from "./simulation";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
+import "./index.css";
 
 //ネットワーク図
 const NetworkChart = (props) => {
@@ -430,110 +431,142 @@ const App = () => {
       </head>
 
       {/*配置*/}
-      <div className="tile is-ancestor">
-        <div className="tile is-vertical is-3">
-          <div className="tile">
-            <div className="tile is-parent is-vertical">
-              <article className="tile is-child box">
-                <p className="title">Positive</p>
-                <p className="subtitle">Ctrlで複数選択可能</p>
+      <section className="hero is-primary">
+        <div className="hero-body">
+          <h1 className="title">ねがぽじ拡散シミュレーション</h1>
+          <h2 className="subtitle">さぶたいとる</h2>
+        </div>
+      </section>
 
-                <div className="control">
-                  <div className="select is-multiple">
-                    <select multiple ref={positiveEl}>
-                      {options}
-                    </select>
+      <section className="section">
+        <div className="tile is-ancestor">
+          <div className="tile is-vertical is-2">
+            <div className="tile">
+              <div className="tile is-parent is-vertical">
+                <article className="tile is-child box">
+                  <div className="field">
+                    <label className="label">Positive</label>
+                    <p className="title">Positive</p>
+                    <p className="subtitle">Ctrlで複数選択可能</p>
+                    <div className="control">
+                      <div className="select is-multiple">
+                        <select multiple ref={positiveEl}>
+                          {options}
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
 
-              <article className="tile is-child box">
-                <p className="title">Negative</p>
-                <p className="subtitle">Ctrlで複数選択可能</p>
-
-                <div className="control">
-                  <div className="select is-multiple">
-                    <select multiple ref={negativeEl}>
-                      {options}
-                    </select>
+                <article className="tile is-child box">
+                  <div className="field">
+                    <label className="label">Negative</label>
+                    <p className="title">Negative</p>
+                    <p className="subtitle">Ctrlで複数選択可能</p>
+                    <div className="control">
+                      <div className="select is-multiple">
+                        <select multiple ref={negativeEl}>
+                          {options}
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </div>
+            </div>
+
+            {/*シミュレーションstep作成*/}
+            <div className="tile">
+              <div className="tile is-parent is-vertical">
+                <article className="tile is-child box">
+                  <div className="field">
+                    <label className="label">Step</label>
+                    <p className="title">Step</p>
+                    <p className="subtitle">step設定</p>
+                    <form>
+                      <input name="step" type="number" defaultValue={step} />
+                    </form>
+                    <p>{step}stepまでシミュレーションを行う</p>
+                  </div>
+                </article>
+
+                <article className="tile is-child box">
+                  <div className="field">
+                    <label className="label">Model</label>
+                    {/*選択肢ボタン作成*/}
+                    <p className="title">ルール１：投票Model</p>
+                    <p className="subtitle">
+                      自分の意思を0~100%の割合で反映します
+                    </p>
+                    <select ref={percentEl}>{perOptions}</select>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            {/*スタートボタン*/}
+            <div className="tile">
+              <div className="tile is-parent is-vertical">
+                <article className="tile is-child box">
+                  <div className="field">
+                    <label className="label">Start</label>
+                    <p className="title">Start</p>
+                    <p className="subtitle">
+                      Startボタンを押すとシミュレーションを開始します
+                    </p>
+                    <button
+                      className="button is-danger is-active"
+                      onClick={clickButton}
+                    >
+                      Start
+                    </button>
+                  </div>
+                </article>
+              </div>
             </div>
           </div>
 
-          {/*シミュレーションstep作成*/}
-          <div className="tile">
-            <div className="tile is-parent is-vertical">
-              <article className="tile is-child box">
-                <p className="title">Step</p>
-                <p className="subtitle">step設定</p>
-                <form>
+          <div className="tile is-parent">
+            <div className="tile">
+              <article className="tile is-parent box is-vertical">
+                <p className="title">ネットワーク</p>
+                <p className="subtitle">コメント</p>
+                {/*ステップ数更新作成*/}
+                <form onSubmit={handleSubmit}>
                   <input name="step" type="number" defaultValue={step} />
+                  <button type="submit">ステップ数を変更する！</button>
                 </form>
-                <p>{step}stepまでシミュレーションを行う</p>
-              </article>
-
-              <article className="tile is-child box">
-                {/*選択肢ボタン作成*/}
-                <p className="title">ルール１：投票Model</p>
-                <p className="subtitle">自分の意思を0~100%の割合で反映します</p>
-                <select ref={percentEl}>{perOptions}</select>
+                <p>現在のステップ数　{step}</p>
+                <NetworkChart
+                  step={step}
+                  newNodes={newNodes}
+                  newLinks={newLinks}
+                />
               </article>
             </div>
           </div>
+          <div className="tile is-parent">
+            <div className="tile">
+              <article className="tile is-child  box is-vertical">
+                <p className="title">折れ線グラフ</p>
+                <p className="subtitle">コメント</p>
+                <LineChart
+                  step={step}
+                  newNodes={newNodes}
+                  newLinks={newLinks}
+                />
+                <p className="title">次数の分布</p>
 
-          {/*スタートボタン*/}
-          <div className="tile">
-            <div className="tile is-parent is-vertical">
-              <article className="tile is-child box">
-                <p className="title">Start</p>
-                <p className="subtitle">
-                  Startボタンを押すとシミュレーションを開始します
-                </p>
-                <button
-                  className="button is-danger is-active"
-                  onClick={clickButton}
-                >
-                  Start
-                </button>
+                <MyResponsiveScatterPlot
+                  step={step}
+                  newNodes={newNodes}
+                  newLinks={newLinks}
+                />
               </article>
             </div>
           </div>
         </div>
-
-        <div className="tile is-parent">
-          <div className="tile">
-            <article className="tile is-parent is-vertical">
-              <p className="title">ネットワーク</p>
-              <p className="subtitle">コメント</p>
-              {/*ステップ数更新作成*/}
-              <form onSubmit={handleSubmit}>
-                <input name="step" type="number" defaultValue={step} />
-                <button type="submit">ステップ数を変更する！</button>
-              </form>
-              <p>現在のステップ数　{step}</p>
-              <NetworkChart
-                step={step}
-                newNodes={newNodes}
-                newLinks={newLinks}
-              />
-            </article>
-            <article className="tile is-child is-vertical">
-              <p className="title">折れ線グラフ</p>
-              <p className="subtitle">コメント</p>
-              <LineChart step={step} newNodes={newNodes} newLinks={newLinks} />
-              <p className="title">次数の分布</p>
-
-              <MyResponsiveScatterPlot
-                step={step}
-                newNodes={newNodes}
-                newLinks={newLinks}
-              />
-            </article>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
