@@ -21,11 +21,11 @@ const NetworkChart = (props) => {
         iterations={50}
         nodeColor={(node) => {
           if (node.values[step] === 1) {
-            return "red";
+            return "#E23C34"; //"red";
           } else if (node.values[step] === 0) {
             return "gray";
           } else if (node.values[step] === -1) {
-            return "blue";
+            return "#5BB2DD"; //"blue";
           }
         }}
         linkColor={(link) => {
@@ -141,11 +141,11 @@ const LineChart = (props) => {
         }}
         colors={(data) => {
           if (data.id === "Negative") {
-            return "blue";
+            return "#5BB2DD"; //"blue";
           } else if (data.id === "Neutral") {
             return "gray";
           } else {
-            return "red";
+            return "#E23C34"; //"red";
           }
         }}
         pointSize={10}
@@ -189,7 +189,9 @@ const LineChart = (props) => {
 //次数の分布
 const MyResponsiveScatterPlot = (props) => {
   const step = props.step;
+  const data = props.data;
   const newNodes = props.newNodes;
+  const newLinks = props.newLinks;
   const LineNodes = newNodes;
   //各ステップごとの-1,0,1の数を数えるcountの作成し０で初期化
   var count = { Negative: {}, Neutral: {}, Positive: {} };
@@ -230,19 +232,48 @@ const MyResponsiveScatterPlot = (props) => {
     }
   }
 
+  //次数について
+  function Degcount(value) {
+    var Degc = 0;
+    for (const links of newLinks) {
+      if (value.id === links.source || value.id === links.target) {
+        Degc++;
+      }
+    }
+    if (Degc > 0) {
+      value.Degree = Degc;
+      return value;
+    }
+  }
+  var DegNodes = [];
+  DegNodes = data.nodes.filter(Degcount);
+  DegNodes.sort(function (a, b) {
+    return a.Degree > b.Degree ? -1 : 1;
+  });
+  DegNodes.slice(0, 99);
+
+  //各次数の数を数える
+  const degreeCounts = {};
+  for (const DegNode of DegNodes) {
+    degreeCounts[DegNode.Degree] = 0;
+  }
+
+  for (const DegNode of DegNodes) {
+    degreeCounts[DegNode.Degree]++;
+  }
+
   //欲しいデータの形に作った配列等を代入する
   const alldata = [];
   function dataset() {
-    return Object.entries(count).map(([key, values]) => {
-      var stepcount = 0;
+    return Object.entries(degreeCounts).map(([key, values]) => {
       return {
         id: key,
-        data: Object.values(values).map((d) => {
-          return {
-            x: stepcount++,
-            y: d,
-          };
-        }),
+        data: [
+          {
+            x: key,
+            y: values,
+          },
+        ],
       };
     });
   }
@@ -270,7 +301,7 @@ const MyResponsiveScatterPlot = (props) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "weight",
+          legend: "Degree",
           legendPosition: "middle",
           legendOffset: 46,
         }}
@@ -279,7 +310,7 @@ const MyResponsiveScatterPlot = (props) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "size",
+          legend: "Count",
           legendPosition: "middle",
           legendOffset: -60,
         }}
@@ -430,142 +461,152 @@ const App = () => {
         ></link>
       </head>
 
-      {/*配置*/}
-      <section className="hero is-primary">
+      {/*ヘッダー*/}
+
+      <section className="hero is-warning">
         <div className="hero-body">
-          <h1 className="title">ねがぽじ拡散シミュレーション</h1>
-          <h2 className="subtitle">さぶたいとる</h2>
+          <h1 className="title">Negative・Positiveの拡散シミュレーション</h1>
+          <h2 className="subtitle">Twitterのデータを用います。</h2>
         </div>
       </section>
 
+      {/*tile*/}
       <section className="section">
         <div className="tile is-ancestor">
-          <div className="tile is-vertical is-2">
+          <div className="tile is-vertical">
             <div className="tile">
-              <div className="tile is-parent is-vertical">
-                <article className="tile is-child box">
+              <div className="tile is-parent is-vertical is-2">
+                {/*詳細設定 */}
+                <article className="tile is-child notification">
                   <div className="field">
-                    <label className="label">Positive</label>
-                    <p className="title">Positive</p>
-                    <p className="subtitle">Ctrlで複数選択可能</p>
-                    <div className="control">
-                      <div className="select is-multiple">
-                        <select multiple ref={positiveEl}>
-                          {options}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+                    <p className="title">詳細設定</p>
+                    <p className="subtitle">
+                      4つのBOX内を設定し、Startボタンを押すとシミュレーションを開始します。
+                    </p>
 
-                <article className="tile is-child box">
-                  <div className="field">
-                    <label className="label">Negative</label>
-                    <p className="title">Negative</p>
-                    <p className="subtitle">Ctrlで複数選択可能</p>
-                    <div className="control">
-                      <div className="select is-multiple">
-                        <select multiple ref={negativeEl}>
-                          {options}
-                        </select>
-                      </div>
+                    <div className="tile is-parent">
+                      <article className="tile is-child notification is-white">
+                        <p className="title">Positive</p>
+                        <p className="subtitle">Ctrlで複数選択可能</p>
+                        <div className="control">
+                          <div className="select is-multiple">
+                            <select multiple ref={positiveEl}>
+                              {options}
+                            </select>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                    <div className="tile is-parent">
+                      <article className="tile is-child notification is-white">
+                        <p className="title">Negative</p>
+                        <p className="subtitle">Ctrlで複数選択可能</p>
+                        <div className="control">
+                          <div className="select is-multiple">
+                            <select multiple ref={negativeEl}>
+                              {options}
+                            </select>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                    {/*シミュレーションstep*/}
+                    <div className="tile is-parent ">
+                      <article className="tile is-child notification is-white">
+                        <p className="title">Step</p>
+                        <p className="subtitle">step設定</p>
+                        <div class="control has-icons-left has-icons-right">
+                          <form>
+                            <input
+                              name="step"
+                              type="number"
+                              defaultValue={step}
+                            />
+                          </form>
+                        </div>
+                        <p>{step}stepまでシミュレーションを行う</p>
+                      </article>
+                    </div>
+
+                    <div className="tile is-parent">
+                      <article className="tile is-child notification is-white">
+                        <p className="title">ルール１：投票Model</p>
+                        <p className="subtitle">
+                          自分の意思を0~100%の割合で反映します
+                        </p>
+                        {/*選択肢ボタン*/}
+                        <div className="control">
+                          <div className="select">
+                            <select ref={percentEl}>{perOptions}</select>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                    <div className="tile is-parent  notification">
+                      <article className="tile is-child notification is-white">
+                        <button
+                          className="button is-danger is-active is-large is-fullwidth"
+                          onClick={clickButton}
+                        >
+                          Start
+                        </button>
+                      </article>
                     </div>
                   </div>
                 </article>
               </div>
-            </div>
-
-            {/*シミュレーションstep作成*/}
-            <div className="tile">
-              <div className="tile is-parent is-vertical">
-                <article className="tile is-child box">
-                  <div className="field">
-                    <label className="label">Step</label>
-                    <p className="title">Step</p>
-                    <p className="subtitle">step設定</p>
-                    <form>
-                      <input name="step" type="number" defaultValue={step} />
-                    </form>
-                    <p>{step}stepまでシミュレーションを行う</p>
-                  </div>
-                </article>
-
-                <article className="tile is-child box">
-                  <div className="field">
-                    <label className="label">Model</label>
-                    {/*選択肢ボタン作成*/}
-                    <p className="title">ルール１：投票Model</p>
-                    <p className="subtitle">
-                      自分の意思を0~100%の割合で反映します
-                    </p>
-                    <select ref={percentEl}>{perOptions}</select>
-                  </div>
-                </article>
-              </div>
-            </div>
-
-            {/*スタートボタン*/}
-            <div className="tile">
-              <div className="tile is-parent is-vertical">
-                <article className="tile is-child box">
-                  <div className="field">
-                    <label className="label">Start</label>
-                    <p className="title">Start</p>
-                    <p className="subtitle">
-                      Startボタンを押すとシミュレーションを開始します
-                    </p>
-                    <button
-                      className="button is-danger is-active"
-                      onClick={clickButton}
-                    >
-                      Start
+              {/*可視化結果*/}
+              <div className="tile is-parent is-vertical ">
+                <article className="tile is-child notification is-white">
+                  <p className="title">ネットワーク</p>
+                  <p className="subtitle">Top tile</p>
+                  <form onSubmit={handleSubmit}>
+                    <input name="step" type="number" defaultValue={step} />
+                    <button className="button is-light" type="submit">
+                      ステップ数を変更する！
                     </button>
+                  </form>
+                  <p>現在のステップ数 {step}</p>
+
+                  <div className="container ">
+                    <NetworkChart
+                      step={step}
+                      newNodes={newNodes}
+                      newLinks={newLinks}
+                    />
                   </div>
                 </article>
               </div>
-            </div>
-          </div>
-
-          <div className="tile is-parent">
-            <div className="tile">
-              <article className="tile is-parent box is-vertical">
-                <p className="title">ネットワーク</p>
-                <p className="subtitle">コメント</p>
-                {/*ステップ数更新作成*/}
-                <form onSubmit={handleSubmit}>
-                  <input name="step" type="number" defaultValue={step} />
-                  <button type="submit">ステップ数を変更する！</button>
-                </form>
-                <p>現在のステップ数　{step}</p>
-                <NetworkChart
-                  step={step}
-                  newNodes={newNodes}
-                  newLinks={newLinks}
-                />
-              </article>
-            </div>
-          </div>
-          <div className="tile is-parent">
-            <div className="tile">
-              <article className="tile is-child  box is-vertical">
-                <p className="title">折れ線グラフ</p>
-                <p className="subtitle">コメント</p>
-                <LineChart
-                  step={step}
-                  newNodes={newNodes}
-                  newLinks={newLinks}
-                />
-                <p className="title">次数の分布</p>
-
-                <MyResponsiveScatterPlot
-                  step={step}
-                  newNodes={newNodes}
-                  newLinks={newLinks}
-                />
-              </article>
+              <div className="tile  is-vertical is-parent ">
+                <article className="tile  is-vertical is-child notification is-white">
+                  <p className="title">折れ線グラフ</p>
+                  <p className="subtitle">Top tile</p>
+                  <div className="container">
+                    <LineChart
+                      step={step}
+                      newNodes={newNodes}
+                      newLinks={newLinks}
+                    />
+                  </div>
+                </article>
+                <article className="tile  is-vertical is-child notification is-white">
+                  <p className="title">次数分布</p>
+                  <p className="subtitle">Top tile</p>
+                  <div className="container ">
+                    <MyResponsiveScatterPlot
+                      step={step}
+                      data={data}
+                      newNodes={newNodes}
+                      newLinks={newLinks}
+                    />
+                  </div>
+                </article>
+              </div>
             </div>
           </div>
         </div>
+
+        {/*tile*/}
       </section>
     </div>
   );
