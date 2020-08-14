@@ -31,7 +31,7 @@ const NetworkChart = (props) => {
         linkColor={(link) => {
           return "gray";
         }}
-        nodeBorderWidth={1}
+        nodeBorderWidth={0}
         nodeBorderColor={{ from: "color", modifiers: [["darker", 0.8]] }}
         linkThickness={(link) => {
           return 2;
@@ -191,7 +191,7 @@ const MyResponsiveScatterPlot = (props) => {
   const step = props.step;
   const data = props.data;
   const newNodes = props.newNodes;
-  const newLinks = props.newLinks;
+  //const newLinks = props.newLinks;
   const LineNodes = newNodes;
   //各ステップごとの-1,0,1の数を数えるcountの作成し０で初期化
   var count = { Negative: {}, Neutral: {}, Positive: {} };
@@ -235,7 +235,7 @@ const MyResponsiveScatterPlot = (props) => {
   //次数について
   function Degcount(value) {
     var Degc = 0;
-    for (const links of newLinks) {
+    for (const links of data.links) {
       if (value.id === links.source || value.id === links.target) {
         Degc++;
       }
@@ -265,17 +265,17 @@ const MyResponsiveScatterPlot = (props) => {
   //欲しいデータの形に作った配列等を代入する
   const alldata = [];
   function dataset() {
-    return Object.entries(degreeCounts).map(([key, values]) => {
-      return {
-        id: key,
-        data: [
-          {
+    return [
+      {
+        id: "Degree",
+        data: Object.entries(degreeCounts).map(([key, values]) => {
+          return {
             x: key,
-            y: values,
-          },
-        ],
-      };
-    });
+            y: values / DegNodes.length,
+          };
+        }),
+      },
+    ];
   }
   const result = dataset(alldata);
   console.log(result);
@@ -285,13 +285,13 @@ const MyResponsiveScatterPlot = (props) => {
       <ResponsiveScatterPlot
         data={result}
         margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
-        xScale={{ type: "linear", min: 0, max: "auto" }}
+        xScale={{ type: "log", min: 1, max: "auto" }}
         xFormat={function (e) {
-          return e + " kg";
+          return e + "";
         }}
-        yScale={{ type: "linear", min: 0, max: "auto" }}
+        yScale={{ type: "log", min: 1e-5, max: 1 }}
         yFormat={function (e) {
-          return e + " cm";
+          return e + "";
         }}
         blendMode="multiply"
         axisTop={null}
@@ -313,6 +313,10 @@ const MyResponsiveScatterPlot = (props) => {
           legend: "Count",
           legendPosition: "middle",
           legendOffset: -60,
+          format: (index) => {
+            const e = index.toExponential(1);
+            return e.startsWith("1") ? e : "";
+          },
         }}
         legends={[
           {
