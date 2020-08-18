@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/nivo2/static/css/main.e909cbf0.chunk.css",
+    "main.js": "/nivo2/static/js/main.32bd6bf8.chunk.js",
+    "main.js.map": "/nivo2/static/js/main.32bd6bf8.chunk.js.map",
+    "runtime-main.js": "/nivo2/static/js/runtime-main.4e8a01d0.js",
+    "runtime-main.js.map": "/nivo2/static/js/runtime-main.4e8a01d0.js.map",
+    "static/js/2.b0b177b3.chunk.js": "/nivo2/static/js/2.b0b177b3.chunk.js",
+    "static/js/2.b0b177b3.chunk.js.map": "/nivo2/static/js/2.b0b177b3.chunk.js.map",
+    "index.html": "/nivo2/index.html",
+    "precache-manifest.a03ec3ef993500ee48810c2496f90f0f.js": "/nivo2/precache-manifest.a03ec3ef993500ee48810c2496f90f0f.js",
+    "service-worker.js": "/nivo2/service-worker.js",
+    "static/css/main.e909cbf0.chunk.css.map": "/nivo2/static/css/main.e909cbf0.chunk.css.map",
+    "static/js/2.b0b177b3.chunk.js.LICENSE.txt": "/nivo2/static/js/2.b0b177b3.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4e8a01d0.js",
+    "static/js/2.b0b177b3.chunk.js",
+    "static/css/main.e909cbf0.chunk.css",
+    "static/js/main.32bd6bf8.chunk.js"
+  ]
+}
