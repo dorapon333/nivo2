@@ -404,6 +404,7 @@ const App = () => {
   }
 
   const newNodes = data.nodes.filter(check);
+  console.log(newNodes);
 
   //次数について
   function Degcount(value) {
@@ -440,6 +441,7 @@ const App = () => {
   };
 
   const handleClickEvent = (currentStep) => {
+    console.log(data);
     console.log("simu" + currentStep);
     setStep(currentStep);
     setnowStep(currentStep);
@@ -492,158 +494,159 @@ const App = () => {
 
       {/*tile*/}
       <section className="section">
-        <div className="tile is-ancestor">
-          <div className="tile is-vertical">
-            <div className="tile">
-              <div className="tile is-parent is-vertical is-2">
-                {/*詳細設定 */}
-                <article className="tile is-child notification">
-                  <div className="field">
-                    <p className="title">詳細設定</p>
+        <div className="container is-fluid">
+          <div className="tile is-ancestor">
+            <div className="tile is-vertical">
+              <div className="tile">
+                <div className="tile is-parent is-vertical is-2">
+                  {/*詳細設定 */}
+                  <article className="tile is-child notification">
+                    <div className="field">
+                      <p className="title">詳細設定</p>
+                      <p className="subtitle">
+                        4つの項目の詳細を設定し、Startボタンを押してください。
+                        シミュレーションが開始されます。
+                      </p>
+
+                      <div className="tile is-parent">
+                        <article className="tile is-child notification">
+                          <p className="title">Positive</p>
+                          <p className="subtitle">Ctrlで複数選択可能</p>
+                          <div className="control">
+                            <div className="select is-multiple">
+                              <select multiple ref={positiveEl}>
+                                {options}
+                              </select>
+                            </div>
+                          </div>
+                        </article>
+                      </div>
+                      <div className="tile is-parent">
+                        <article className="tile is-child notification">
+                          <p className="title">Negative</p>
+                          <p className="subtitle">Ctrlで複数選択可能</p>
+                          <div className="control">
+                            <div className="select is-multiple">
+                              <select multiple ref={negativeEl}>
+                                {options}
+                              </select>
+                            </div>
+                          </div>
+                        </article>
+                      </div>
+                      {/*シミュレーションstep*/}
+                      <div className="tile is-parent ">
+                        <article className="tile is-child notification">
+                          <p className="title">Step</p>
+                          <p className="subtitle">step設定</p>
+                          <div class="control has-icons-left has-icons-right">
+                            <form onChange={handleChange}>
+                              <input
+                                name="step"
+                                type="number"
+                                defaultValue={step}
+                              />
+                              <p>{nowStep}stepまでシミュレーションを行う</p>
+                            </form>
+                          </div>
+                        </article>
+                      </div>
+
+                      <div className="tile is-parent">
+                        <article className="tile is-child notification">
+                          <p className="title">ルール１：投票Model</p>
+                          <p className="subtitle">
+                            自分の意思を0~100%の割合で反映します
+                          </p>
+                          {/*選択肢ボタン*/}
+                          <div className="control">
+                            <div className="select">
+                              <select ref={percentEl}>{perOptions}</select>
+                            </div>
+                          </div>
+                        </article>
+                      </div>
+                      <div className="tile is-parent  notification">
+                        <article className="tile is-child notification">
+                          <button
+                            className="button is-danger is-active is-large is-fullwidth"
+                            onClick={clickButton}
+                          >
+                            Start
+                          </button>
+                        </article>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                {/*可視化結果*/}
+                <div className="tile is-parent is-vertical ">
+                  <article className="tile is-child notification is-white">
+                    <p className="title">ネットワーク</p>
                     <p className="subtitle">
-                      4つの項目の詳細を設定し、Startボタンを押してください。
-                      シミュレーションが開始されます。
+                      PositiveとNegativeに関するネットワーク図です。
+                      下のステップ数を変更する事で、各ステップのシミュレーションを見る事ができます。
+                      <br></br>
+                      赤色は「正しい情報を知っている状態( Positive
+                      )」です。灰色は 「何も知らない状態( Neutral )」
+                      です。青色は「デマを信じている状態( Negative )」です。
+                      「weight(RT回数)」が5以下のものと、孤立ノードは予め取り除いています。
                     </p>
+                    <form onSubmit={handleSubmit}>
+                      <input name="step" type="number" defaultValue={step} />
+                      <button className="button is-light" type="submit">
+                        ステップ数を変更する！
+                      </button>
+                      <p>現在のステップ数 {step}</p>
+                    </form>
 
-                    <div className="tile is-parent">
-                      <article className="tile is-child notification">
-                        <p className="title">Positive</p>
-                        <p className="subtitle">Ctrlで複数選択可能</p>
-                        <div className="control">
-                          <div className="select is-multiple">
-                            <select multiple ref={positiveEl}>
-                              {options}
-                            </select>
-                          </div>
-                        </div>
-                      </article>
+                    <div className="container ">
+                      <NetworkChart
+                        step={step}
+                        newNodes={newNodes}
+                        newLinks={newLinks}
+                      />
                     </div>
-                    <div className="tile is-parent">
-                      <article className="tile is-child notification">
-                        <p className="title">Negative</p>
-                        <p className="subtitle">Ctrlで複数選択可能</p>
-                        <div className="control">
-                          <div className="select is-multiple">
-                            <select multiple ref={negativeEl}>
-                              {options}
-                            </select>
-                          </div>
-                        </div>
-                      </article>
+                  </article>
+                </div>
+                <div className="tile  is-vertical is-parent ">
+                  <article className="tile  is-vertical is-child notification is-white">
+                    <p className="title">折れ線グラフ</p>
+                    <p className="subtitle">
+                      各タイムステップに対し、ノード数の割合を見る事ができます。
+                      横軸が「各タイムステップ」、縦軸が「全体を１とした時の割合」です。
+                      <br></br>
+                      ※全体を１としています
+                    </p>
+                    <div className="container">
+                      <LineChart
+                        step={step}
+                        nowStep={nowStep}
+                        newNodes={newNodes}
+                        newLinks={newLinks}
+                      />
                     </div>
-                    {/*シミュレーションstep*/}
-                    <div className="tile is-parent ">
-                      <article className="tile is-child notification">
-                        <p className="title">Step</p>
-                        <p className="subtitle">step設定</p>
-                        <div class="control has-icons-left has-icons-right">
-                          <form onChange={handleChange}>
-                            <input
-                              name="step"
-                              type="number"
-                              defaultValue={step}
-                            />
-                            <p>{nowStep}stepまでシミュレーションを行う</p>
-                          </form>
-                        </div>
-                      </article>
+                  </article>
+                  <article className="tile  is-vertical is-child notification is-white">
+                    <p className="title">次数分布</p>
+                    <p className="subtitle">
+                      次数に関した分布をみる事がでます。
+                      横軸が「次数」、縦軸が「割合」です。
+                    </p>
+                    <div className="container ">
+                      <MyResponsiveScatterPlot
+                        step={step}
+                        data={data}
+                        newNodes={newNodes}
+                        newLinks={newLinks}
+                      />
                     </div>
-
-                    <div className="tile is-parent">
-                      <article className="tile is-child notification">
-                        <p className="title">投票Model</p>
-                        <p className="subtitle">
-                          自分の意思を0~100%の割合で反映します
-                        </p>
-                        {/*選択肢ボタン*/}
-                        <div className="control">
-                          <div className="select">
-                            <select ref={percentEl}>{perOptions}</select>
-                          </div>
-                        </div>
-                      </article>
-                    </div>
-                    <div className="tile is-parent  notification">
-                      <article className="tile is-child notification">
-                        <button
-                          className="button is-danger is-active is-large is-fullwidth"
-                          onClick={clickButton}
-                        >
-                          Start
-                        </button>
-                      </article>
-                    </div>
-                  </div>
-                </article>
-              </div>
-              {/*可視化結果*/}
-              <div className="tile is-parent is-vertical ">
-                <article className="tile is-child notification is-white">
-                  <p className="title">ネットワーク</p>
-                  <p className="subtitle">
-                    PositiveとNegativeに関するネットワーク図です。
-                    下のステップ数を変更する事で、各ステップのシミュレーションを見る事ができます。
-                    <br></br>
-                    青色は「正しい情報を知っている状態( Positive )」です。灰色は
-                    「何も知らない状態( Neutral )」
-                    です。赤色は「デマを信じている状態( Negative )」です。
-                    「weight(RT回数)」が5以下のものと、孤立ノードは予め取り除いています。
-                  </p>
-                  <form onSubmit={handleSubmit}>
-                    <input name="step" type="number" defaultValue={step} />
-                    <button className="button is-light" type="submit">
-                      ステップ数を変更する！
-                    </button>
-                    <p>現在のステップ数 {step}</p>
-                  </form>
-
-                  <div className="container ">
-                    <NetworkChart
-                      step={step}
-                      newNodes={newNodes}
-                      newLinks={newLinks}
-                    />
-                  </div>
-                </article>
-              </div>
-              <div className="tile  is-vertical is-parent ">
-                <article className="tile  is-vertical is-child notification is-white">
-                  <p className="title">折れ線グラフ</p>
-                  <p className="subtitle">
-                    各タイムステップに対し、ノード数の割合を見る事ができます。
-                    横軸が「各タイムステップ」、縦軸が「全体を１とした時の割合」です。
-                    <br></br>
-                    ※全体を１としています
-                  </p>
-                  <div className="container">
-                    <LineChart
-                      step={step}
-                      nowStep={nowStep}
-                      newNodes={newNodes}
-                      newLinks={newLinks}
-                    />
-                  </div>
-                </article>
-                <article className="tile  is-vertical is-child notification is-white">
-                  <p className="title">次数分布</p>
-                  <p className="subtitle">
-                    次数に関した分布をみる事がでます。
-                    横軸が「次数」、縦軸が「割合」です。
-                  </p>
-                  <div className="container ">
-                    <MyResponsiveScatterPlot
-                      step={step}
-                      data={data}
-                      newNodes={newNodes}
-                      newLinks={newLinks}
-                    />
-                  </div>
-                </article>
+                  </article>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
         {/*tile*/}
       </section>
       <footer className="footer is-warning">
