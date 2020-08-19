@@ -551,7 +551,7 @@ const App = () => {
 
                     <div className="tile is-parent">
                       <article className="tile is-child notification">
-                        <p className="title">ルール１：投票Model</p>
+                        <p className="title">投票Model</p>
                         <p className="subtitle">
                           自分の意思を0~100%の割合で反映します
                         </p>
