@@ -497,7 +497,8 @@ const App = () => {
                   <div className="field">
                     <p className="title">詳細設定</p>
                     <p className="subtitle">
-                      4つのBOX内を設定し、Startボタンを押すとシミュレーションを開始します。
+                      4つの項目の詳細を設定し、Startボタンを押してください。
+                      シミュレーションが開始されます。
                     </p>
 
                     <div className="tile is-parent">
@@ -575,7 +576,15 @@ const App = () => {
               <div className="tile is-parent is-vertical ">
                 <article className="tile is-child notification is-white">
                   <p className="title">ネットワーク</p>
-                  <p className="subtitle">Top tile</p>
+                  <p className="subtitle">
+                    PositiveとNegativeに関するネットワーク図です。
+                    下のステップ数を変更する事で、各ステップのシミュレーションを見る事ができます。
+                    <br></br>
+                    青色は「正しい情報を知っている状態( Positive )」です。灰色は
+                    「何も知らない状態( Neutral )」
+                    です。赤色は「デマを信じている状態( Negative )」です。
+                    「weight(RT回数)」が5以下のものと、孤立ノードは予め取り除いています。
+                  </p>
                   <form onSubmit={handleSubmit}>
                     <input name="step" type="number" defaultValue={step} />
                     <button className="button is-light" type="submit">
@@ -597,7 +606,10 @@ const App = () => {
                 <article className="tile  is-vertical is-child notification is-white">
                   <p className="title">折れ線グラフ</p>
                   <p className="subtitle">
-                    各ステップ毎のノード数の割合を見ることができます。
+                    各タイムステップに対し、ノード数の割合を見る事ができます。
+                    横軸が「各タイムステップ」、縦軸が「全体を１とした時の割合」です。
+                    <br></br>
+                    ※全体を１としています
                   </p>
                   <div className="container">
                     <LineChart
@@ -610,7 +622,10 @@ const App = () => {
                 </article>
                 <article className="tile  is-vertical is-child notification is-white">
                   <p className="title">次数分布</p>
-                  <p className="subtitle">各次数のノードの個数を表した分布</p>
+                  <p className="subtitle">
+                    次数に関した分布をみる事がでます。
+                    横軸が「次数」、縦軸が「割合」です。
+                  </p>
                   <div className="container ">
                     <MyResponsiveScatterPlot
                       step={step}
