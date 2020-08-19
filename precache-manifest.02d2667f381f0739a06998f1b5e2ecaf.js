@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "99877355e99f391730a296d2a8984a31",
+    "revision": "6f45be8bf2f685dd6aa9f25cab94e7ca",
     "url": "/nivo2/index.html"
   },
   {
-    "revision": "cded74dc5c0827e3e7b6",
+    "revision": "8c5ac50c2e89bcb8ed8e",
     "url": "/nivo2/static/css/main.e909cbf0.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/nivo2/static/js/2.b0b177b3.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "cded74dc5c0827e3e7b6",
-    "url": "/nivo2/static/js/main.32bd6bf8.chunk.js"
+    "revision": "8c5ac50c2e89bcb8ed8e",
+    "url": "/nivo2/static/js/main.a13449f2.chunk.js"
   },
   {
     "revision": "96ae33b6c2207ce04c45",
