@@ -482,7 +482,10 @@ const App = () => {
       <section className="hero is-warning">
         <div className="hero-body">
           <h1 className="title">Negative・Positiveの拡散シミュレーション</h1>
-          <h2 className="subtitle">Twitterのデータを用います。</h2>
+          <h2 className="subtitle">
+    佐野幸恵らの「SNSにおける福島原発事故後の放射線情報拡散シミュレーション」
+            で収集された放射線に関するツイートデータを用いています。
+            データのRT関連データを作成し、３つのシミュレーションを行います。</h2>
         </div>
       </section>
 
