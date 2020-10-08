@@ -613,7 +613,7 @@ const App = () => {
             <article className="tile  is-vertical is-child notification is-white">
               <p className="title">折れ線グラフ</p>
               <p className="subtitle">
-                各タイムステップに対し、ノード数の割合を見る事ができます。..
+                各タイムステップに対し、ノード数の割合を見る事ができます。
                 横軸が「各タイムステップ」、縦軸が「全体を１とした時の割合」です。
                 <br></br>
                 ※全体を１としています
