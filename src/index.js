@@ -155,11 +155,11 @@ const LineChart = (props) => {
       useMesh={true}
       legends={[
         {
-          anchor: "bottom-right",
-          direction: "column",
+          anchor: "bottom-top",
+          direction: "row",
           justify: false,
-          translateX: 100,
-          translateY: 0,
+          translateX: 0,
+          translateY: -20,
           itemsSpacing: 0,
           itemDirection: "left-to-right",
           itemWidth: 80,
@@ -315,13 +315,13 @@ const MyResponsiveScatterPlot = (props) => {
       }}
       legends={[
         {
-          anchor: "bottom-right",
-          direction: "column",
+          anchor: "bottom-top",
+          direction: "row",
           justify: false,
-          translateX: 130,
+          translateX: 0,
           translateY: 0,
           itemWidth: 100,
-          itemHeight: 12,
+          itemHeight: -20,
           itemsSpacing: 5,
           itemDirection: "left-to-right",
           symbolSize: 12,
@@ -425,6 +425,9 @@ const App = () => {
     return <option value={value.id}>{value.name}</option>;
   });
   const percents = [0, 25, 50, 75, 100];
+  /*for (let i = 0; i <= 100; i++) {
+    percents[i] = i;
+  }*/
   const perOptions = percents.map((value) => {
     return <option value={value}>{value}</option>;
   });
