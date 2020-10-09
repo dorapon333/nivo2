@@ -365,21 +365,20 @@ const App = () => {
   const [nowStep, setnowStep] = useState(50);
   const [step, setStep] = useState(50);
   var steps = [];
-  for (var i = 1; i < nowStep; i++) {
+  for (var i = 0; i <= nowStep; i++) {
     steps[i] = i;
   }
 
   const handleChange = (event) => {
     event.preventDefault();
     currentStep = +event.target.value;
-    console.log("handleChange" + currentStep);
   };
 
-  const handleSubmit = (event) => {
+  /*const handleSubmit = (event) => {
     event.preventDefault();
     setStep(+event.target.elements.step.value);
     console.log("handleSubmit" + event.target.elements.step.value);
-  };
+  };*/
 
   //data set
   const [data, setData] = useState({ nodes: [], links: [] });
@@ -463,6 +462,14 @@ const App = () => {
     handleClickEvent(currentStep);
   };
 
+  const handlestep = () => {
+    for (const option of stepEl.current.options) {
+      if (option.selected === true) {
+        setStep(option.value);
+      }
+    }
+  };
+
   const handleClickEvent = (currentStep) => {
     console.log(data);
     console.log("simu" + currentStep);
@@ -473,19 +480,16 @@ const App = () => {
     var positiveIds = [];
     var negativeIds = [];
 
-    for (var i = 0; i < nowStep; i++) {
+    for (var i = 0; i <= nowStep; i++) {
       stepOptions[i] = i;
     }
-    /*for (const option of stepEl.current.options) {
-      if (option.selected === true) {
-        currentstep = option.value;
-      }
-    }*/
+
     for (const option of percentEl.current.options) {
       if (option.selected === true) {
         percent = option.value;
       }
     }
+    console.log(percentEl.current.options);
 
     for (const option of positiveEl.current.options) {
       if (option.selected === true) {
@@ -613,19 +617,17 @@ const App = () => {
               </p>
 
               <div className="field">
-                <form onSubmit={handleSubmit}>
-                  <div className="control">
-                    <div className="field has-addons">
-                      <div className="select is-multiple is-fullwidth">
-                        <select multiple ref={stepEl}>
-                          {stepOptions}
-                        </select>
-                      </div>
-                      <div className="control"></div>
+                <div className="control">
+                  <div className="field has-addons">
+                    <div className="select">
+                      <select ref={stepEl} onChange={handlestep}>
+                        {stepOptions}
+                      </select>
                     </div>
+                    <div className="control"></div>
                   </div>
-                  <p className="help">現在のステップ数 {step}</p>
-                </form>
+                </div>
+                <p className="help">現在のステップ数 {step}</p>
               </div>
 
               <figure className="image is-square ">
