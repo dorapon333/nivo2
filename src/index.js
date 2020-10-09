@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, stepEl } from "react";
 import { render } from "react-dom";
 import { ResponsiveNetwork } from "@nivo/network";
 import { ResponsiveLine } from "@nivo/line";
@@ -37,6 +37,20 @@ const NetworkChart = (props) => {
       }}
       motionStiffness={160}
       motionDamping={12}
+      //追加(10/09)
+      legends={[
+        {
+          effects: [
+            {
+              on: "hover",
+              style: {
+                itemBackground: "rgba(0, 0, 0, .03)",
+                itemOpacity: 1,
+              },
+            },
+          ],
+        },
+      ]}
     />
   );
 };
@@ -345,9 +359,15 @@ const App = () => {
   let positiveEl = useRef(null);
   let negativeEl = useRef(null);
   let percentEl = useRef(null);
+  //step 10/9
+  let stepEl = useRef(null);
   let currentStep = 50;
   const [nowStep, setnowStep] = useState(50);
   const [step, setStep] = useState(50);
+  var steps = [];
+  for (var i = 1; i < nowStep; i++) {
+    steps[i] = i;
+  }
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -424,6 +444,11 @@ const App = () => {
   const options = DegNodes.map((value) => {
     return <option value={value.id}>{value.name}</option>;
   });
+
+  const stepOptions = steps.map((value) => {
+    return <option value={value.id}>{value}</option>;
+  });
+
   const percents = [0, 25, 50, 75, 100];
   /*for (let i = 0; i <= 100; i++) {
     percents[i] = i;
@@ -447,6 +472,15 @@ const App = () => {
     var percent;
     var positiveIds = [];
     var negativeIds = [];
+
+    for (var i = 0; i < nowStep; i++) {
+      stepOptions[i] = i;
+    }
+    /*for (const option of stepEl.current.options) {
+      if (option.selected === true) {
+        currentstep = option.value;
+      }
+    }*/
     for (const option of percentEl.current.options) {
       if (option.selected === true) {
         percent = option.value;
@@ -582,19 +616,12 @@ const App = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="control">
                     <div className="field has-addons">
-                      <div className="control">
-                        <input
-                          className="input"
-                          name="step"
-                          type="number"
-                          defaultValue={step}
-                        />
+                      <div className="select is-multiple is-fullwidth">
+                        <select multiple ref={stepEl}>
+                          {stepOptions}
+                        </select>
                       </div>
-                      <div className="control">
-                        <button className="button is-light" type="submit">
-                          ステップ数を変更する！
-                        </button>
-                      </div>
+                      <div className="control"></div>
                     </div>
                   </div>
                   <p className="help">現在のステップ数 {step}</p>
