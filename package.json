@@ -18,7 +18,7 @@
   "dependencies": {
     "@nivo/bar": "^0.62.0",
     "@nivo/line": "^0.62.0",
-    "@nivo/network": "^0.62.0",
+    "@nivo/network": "^0.63.1",
     "@nivo/scatterplot": "^0.62.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

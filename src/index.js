@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, stepEl } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { render } from "react-dom";
 import { ResponsiveNetwork } from "@nivo/network";
 import { ResponsiveLine } from "@nivo/line";
@@ -35,22 +35,11 @@ const NetworkChart = (props) => {
       linkThickness={(link) => {
         return 2;
       }}
+      tooltip={(node) => {
+        return node.name;
+      }}
       motionStiffness={160}
       motionDamping={12}
-      //追加(10/09)
-      legends={[
-        {
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemBackground: "rgba(0, 0, 0, .03)",
-                itemOpacity: 1,
-              },
-            },
-          ],
-        },
-      ]}
     />
   );
 };
@@ -182,15 +171,6 @@ const LineChart = (props) => {
           symbolSize: 12,
           symbolShape: "circle",
           symbolBorderColor: "rgba(0, 0, 0, .5)",
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemBackground: "rgba(0, 0, 0, .03)",
-                itemOpacity: 1,
-              },
-            },
-          ],
         },
       ]}
     />
@@ -517,7 +497,7 @@ const App = () => {
 
       {/*ヘッダー*/}
 
-      <section className="hero is-warning">
+      <section className="hero is-info">
         <div className="hero-body">
           <h1 className="title">Negative・Positiveの拡散シミュレーション</h1>
           <h2 className="subtitle">
@@ -607,13 +587,16 @@ const App = () => {
             <article className="tile is-child notification is-white">
               <p className="title">ネットワーク</p>
               <p className="subtitle">
-                PositiveとNegativeに関するネットワーク図です。
                 下のステップ数を変更する事で、各ステップのシミュレーションを見る事ができます。
                 <br></br>
-                赤色は「正しい情報を知っている状態( Positive )」です。灰色は
-                「何も知らない状態( Neutral )」
-                です。青色は「デマを信じている状態( Negative )」です。
-                「weight(RT回数)」が5以下のものと、孤立ノードは予め取り除いています。
+                <ul>
+                  <li>
+                    赤色は「正しい情報を知っている状態( Positive )」です。
+                  </li>
+                  <li>青色は「デマを信じている状態( Negative )」です。</li>
+                  <li>灰色は「何も知らない状態( Neutral )」です。</li>
+                  <li>孤立ノードは予め取り除いています。</li>
+                </ul>
               </p>
 
               <div className="field">
