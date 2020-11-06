@@ -38,6 +38,7 @@ const NetworkChart = (props) => {
       tooltip={(node) => {
         return node.name;
       }}
+      tickSize={10}
       motionStiffness={160}
       motionDamping={12}
     />
@@ -269,6 +270,7 @@ const MyResponsiveScatterPlot = (props) => {
     ];
   }
   const result = dataset(alldata);
+  console.log(result);
 
   return (
     <ResponsiveScatterPlot
@@ -429,9 +431,7 @@ const App = () => {
   });
 
   const percents = [0, 25, 50, 75, 100];
-  /*for (let i = 0; i <= 100; i++) {
-    percents[i] = i;
-  }*/
+
   const perOptions = percents.map((value) => {
     return <option value={value}>{value}</option>;
   });
@@ -451,11 +451,8 @@ const App = () => {
   };
 
   const handleClickEvent = (currentStep) => {
-    console.log(data);
-    console.log("simu" + currentStep);
-    setStep(currentStep);
+    setStep(0);
     setnowStep(currentStep);
-    console.log(currentStep);
     var percent;
     var positiveIds = [];
     var negativeIds = [];
@@ -469,7 +466,6 @@ const App = () => {
         percent = option.value;
       }
     }
-    console.log(percentEl.current.options);
 
     for (const option of positiveEl.current.options) {
       if (option.selected === true) {
@@ -482,7 +478,14 @@ const App = () => {
         negativeIds.push(option.value);
       }
     }
-    const newData = simulation(data, positiveIds, negativeIds, percent, step);
+    const newData = simulation(
+      data,
+      positiveIds,
+      negativeIds,
+      percent,
+      currentStep
+    );
+
     setData(newData);
   };
 
@@ -499,7 +502,9 @@ const App = () => {
 
       <section className="hero is-info">
         <div className="hero-body">
-          <h1 className="title">Negative・Positiveの拡散シミュレーション</h1>
+          <h1 className="title">
+            TwitterにおけるNegative・Positiveの拡散シミュレーション
+          </h1>
           <h2 className="subtitle">
             佐野幸恵らの「SNSにおける福島原発事故後の放射線情報拡散シミュレーション」
             で収集された放射線に関するツイートデータを用いています。
@@ -516,7 +521,14 @@ const App = () => {
             <article className="tile is-child notification">
               <p className="title">詳細設定</p>
               <p className="subtitle">
-                4つの項目の詳細を設定し、Startボタンを押してください。
+                4つの項目の詳細
+                <ul>
+                  <li>・Positiveの発信源 </li>
+                  <li>・Negativeの発信源</li>
+                  <li>・シミュレーション期間</li>
+                  <li>・自分の意思の割合</li>
+                </ul>
+                を設定し、Startボタンを押してください。
                 シミュレーションが開始されます。
               </p>
 
@@ -529,7 +541,7 @@ const App = () => {
                     </select>
                   </div>
                 </div>
-                <p className="help">Ctrlで複数選択可能</p>
+                <p className="help">Positiveの発信源を選択</p>
               </div>
 
               <div className="field">
@@ -541,7 +553,7 @@ const App = () => {
                     </select>
                   </div>
                 </div>
-                <p className="help">Ctrlで複数選択可能</p>
+                <p className="help">Negativeの発信源を選択</p>
               </div>
               {/*シミュレーションstep*/}
               <div className="field ">
@@ -560,7 +572,7 @@ const App = () => {
               </div>
 
               <div className="field">
-                <label className="label">ルール１：投票Model</label>
+                <label className="label">自分の意思の割合</label>
                 {/*選択肢ボタン*/}
                 <div className="control">
                   <div className="select is-fullwidth">
@@ -647,8 +659,8 @@ const App = () => {
             <article className="tile  is-vertical is-child notification is-white">
               <p className="title">次数分布</p>
               <p className="subtitle">
-                次数に関した分布をみる事がでます。
-                横軸が「次数」、縦軸が「割合」です。
+                次数に関した両対数グラフをみる事がでます。
+                横軸が「次数」で縦軸が「割合」です
               </p>
               <figure className="image is-2by1">
                 <div className="has-ratio" width="1000" height="500">
