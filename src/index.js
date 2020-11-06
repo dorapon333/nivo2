@@ -516,24 +516,27 @@ const App = () => {
       {/*tile*/}
       <section className="section">
         <div className="tile is-ancestor">
+          <div className="tile is-parent">
+            <article className="tile is-child notification is-white box">
+              <h1>概要</h1>
+              <p>Hello World!</p>
+            </article>
+          </div>
+        </div>
+
+        <div className="tile is-ancestor">
           {/*詳細設定 */}
-          <div className="tile is-2">
-            <article className="tile is-child notification">
+          <div className="tile is-parent is-2">
+            <article className="tile is-child notification box">
               <p className="title">詳細設定</p>
               <p className="subtitle">
-                4つの項目の詳細
-                <ul>
-                  <li>・Positiveの発信源 </li>
-                  <li>・Negativeの発信源</li>
-                  <li>・シミュレーション期間</li>
-                  <li>・自分の意思の割合</li>
-                </ul>
-                を設定し、Startボタンを押してください。
-                シミュレーションが開始されます。
+                4つの項目の詳細 を設定し、Startボタンを押してください。<br></br>
+                シミュレーションが開始されます。<br></br>
+                *重複した選択をすると、正しい結果が出ません。
               </p>
 
               <div className="field">
-                <label className="label">Positive</label>
+                <label className="label">Positiveの発信源</label>
                 <div className="control">
                   <div className="select is-multiple is-fullwidth">
                     <select multiple ref={positiveEl}>
@@ -541,11 +544,10 @@ const App = () => {
                     </select>
                   </div>
                 </div>
-                <p className="help">Positiveの発信源を選択</p>
               </div>
 
               <div className="field">
-                <label className="label">Negative</label>
+                <label className="label">Negativeの発信源</label>
                 <div className="control">
                   <div className="select is-multiple is-fullwidth">
                     <select multiple ref={negativeEl}>
@@ -553,11 +555,10 @@ const App = () => {
                     </select>
                   </div>
                 </div>
-                <p className="help">Negativeの発信源を選択</p>
               </div>
               {/*シミュレーションstep*/}
               <div className="field ">
-                <label className="label">Step</label>
+                <label className="label">シミュレーション期間</label>
                 <div class="control">
                   <form onChange={handleChange}>
                     <input
@@ -596,7 +597,7 @@ const App = () => {
           </div>
           {/*可視化結果*/}
           <div className="tile is-parent is-vertical ">
-            <article className="tile is-child notification is-white">
+            <article className="tile is-child notification is-white box">
               <p className="title">ネットワーク</p>
               <p className="subtitle">
                 下のステップ数を変更する事で、各ステップのシミュレーションを見る事ができます。
@@ -637,7 +638,7 @@ const App = () => {
             </article>
           </div>
           <div className="tile  is-vertical is-parent ">
-            <article className="tile  is-vertical is-child notification is-white">
+            <article className="tile  is-vertical is-child notification is-white box">
               <p className="title">折れ線グラフ</p>
               <p className="subtitle">
                 各タイムステップに対し、ノード数の割合を見る事ができます。
@@ -656,7 +657,7 @@ const App = () => {
                 </div>
               </figure>
             </article>
-            <article className="tile  is-vertical is-child notification is-white">
+            <article className="tile  is-vertical is-child notification is-white box">
               <p className="title">次数分布</p>
               <p className="subtitle">
                 次数に関した両対数グラフをみる事がでます。
