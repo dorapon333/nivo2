@@ -36,7 +36,11 @@ const NetworkChart = (props) => {
         return 2;
       }}
       tooltip={(node) => {
-        return node.name;
+        return (
+          <div>
+            <p style={{ fontSize: 50 }}>{node.name}</p>
+          </div>
+        );
       }}
       tickSize={10}
       motionStiffness={160}
@@ -527,7 +531,7 @@ const App = () => {
         <div className="tile is-ancestor">
           {/*詳細設定 */}
           <div className="tile is-parent is-2">
-            <article className="tile is-child notification box">
+            <article className="tile is-child notification box is-info">
               <p className="title">詳細設定</p>
               <p className="subtitle">
                 4つの項目の詳細 を設定し、Startボタンを押してください。<br></br>

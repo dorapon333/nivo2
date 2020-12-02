@@ -1,7 +1,6 @@
 {
   "name": "nivo",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,11 +16,15 @@
   },
   "dependencies": {
     "@nivo/bar": "^0.62.0",
+    "@nivo/core": "^0.66.0",
     "@nivo/line": "^0.62.0",
-    "@nivo/network": "^0.63.1",
+    "@nivo/network": "^0.66.0",
     "@nivo/scatterplot": "^0.62.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "@nivo/stream": "^0.66.0",
+    "@nivo/tooltip": "^0.66.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "use-measure": "^0.3.0"
   },
   "browserslist": {
     "production": [
@@ -34,5 +37,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dorapon333/nivo2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dorapon333/nivo2/issues"
+  },
+  "description": ""
 }
