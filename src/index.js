@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { render } from "react-dom";
 import { ResponsiveNetwork } from "@nivo/network";
 import { ResponsiveLine } from "@nivo/line";
+import { ResponsiveStream } from "@nivo/stream";
 import { simulation } from "./simulation";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import "./index.css";
@@ -176,6 +177,155 @@ const LineChart = (props) => {
           symbolSize: 12,
           symbolShape: "circle",
           symbolBorderColor: "rgba(0, 0, 0, .5)",
+        },
+      ]}
+    />
+  );
+};
+
+const StreamChart = (props) => {
+  const step = props.nowStep;
+  const newNodes = props.newNodes;
+
+  const streamNodes = newNodes;
+  //各ステップごとの-1,0,1の数を数えるcountの作成し０で初期化
+  let count = [step];
+  for (var d = 0; d < step; d++) {
+    count[d] = { Negative: {}, Neutral: {}, Positive: {} };
+    count[d].Negative = 0;
+    count[d].Neutral = 0;
+    count[d].Positive = 0;
+  }
+
+  //countに対して、実際に-1,0,1の数を数えて代入
+  const valueset = Array.from(new Set(streamNodes.map(({ values }) => values)));
+  for (var v = 0; v < step; v++) {
+    for (const j of valueset) {
+      if (j[v] === -1) {
+        count[v].Negative += 1;
+      } else if (j[v] === 0) {
+        count[v].Neutral += 1;
+      } else if (j[v] === 1) {
+        count[v].Positive += 1;
+      }
+    }
+  }
+
+  //数えられたcountに対して、それを割合に変換する
+  var num = 1.0;
+  for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < step; j++) {
+      num = 1.0;
+      if (i === 0) {
+        num = (count[j].Negative / streamNodes.length) * 100;
+        count[j].Negative = Math.round(num * 10) / 10;
+      } else if (i === 1) {
+        num = (count[j].Neutral / streamNodes.length) * 100;
+        count[j].Neutral = Math.round(num * 10) / 10;
+      } else {
+        num = (count[j].Positive / streamNodes.length) * 100;
+        count[j].Positive = Math.round(num * 10) / 10;
+      }
+    }
+  }
+  console.log(count);
+
+  let streamData = [];
+  streamData = count;
+
+  return (
+    <ResponsiveStream
+      node={newNodes}
+      data={streamData}
+      keys={["Positive", "Negative", "Neutral"]}
+      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      axisTop={null}
+      axisRight={null}
+      axisBottom={{
+        orient: "bottom",
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: "",
+        legendOffset: 36,
+      }}
+      axisLeft={{
+        orient: "left",
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: "",
+        legendOffset: -40,
+      }}
+      offsetType="silhouette"
+      colors={{ scheme: "nivo" }}
+      /*colors={(node) => {
+        if (node.values[step] === 1) {
+          return "#E23C34"; //"red";
+        } else if (node.values[step] === 0) {
+          return "gray";
+        } else if (node.values[step] === -1) {
+          return "#5BB2DD"; //"blue";
+        }
+      }}*/
+      fillOpacity={0.85}
+      borderColor={{ theme: "background" }}
+      defs={[
+        {
+          id: "dots",
+          type: "patternDots",
+          background: "inherit",
+          color: "#2c998f",
+          size: 4,
+          padding: 2,
+          stagger: true,
+        },
+        {
+          id: "squares",
+          type: "patternSquares",
+          background: "inherit",
+          color: "#e4c912",
+          size: 6,
+          padding: 2,
+          stagger: true,
+        },
+      ]}
+      fill={[
+        {
+          match: {
+            id: "Paul",
+          },
+          id: "dots",
+        },
+        {
+          match: {
+            id: "Marcel",
+          },
+          id: "squares",
+        },
+      ]}
+      dotSize={8}
+      dotColor={{ from: "color" }}
+      dotBorderWidth={2}
+      dotBorderColor={{ from: "color", modifiers: [["darker", 0.7]] }}
+      legends={[
+        {
+          anchor: "bottom-right",
+          direction: "column",
+          translateX: 100,
+          itemWidth: 80,
+          itemHeight: 20,
+          itemTextColor: "#999999",
+          symbolSize: 12,
+          symbolShape: "circle",
+          effects: [
+            {
+              on: "hover",
+              style: {
+                itemTextColor: "#000000",
+              },
+            },
+          ],
         },
       ]}
     />
@@ -643,7 +793,7 @@ const App = () => {
           </div>
           <div className="tile  is-vertical is-parent ">
             <article className="tile  is-vertical is-child notification is-white box">
-              <p className="title">折れ線グラフ</p>
+              <p className="title">ストリームグラフ</p>
               <p className="subtitle">
                 各タイムステップに対し、ノード数の割合を見る事ができます。
                 横軸が「各タイムステップ」、縦軸が「全体を１とした時の割合」です。
@@ -652,7 +802,7 @@ const App = () => {
               </p>
               <figure className="image is-2by1">
                 <div className="has-ratio" width="1000" height="500">
-                  <LineChart
+                  <StreamChart
                     step={step}
                     nowStep={nowStep}
                     newNodes={newNodes}
