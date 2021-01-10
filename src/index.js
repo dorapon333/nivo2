@@ -117,7 +117,7 @@ const LineChart = (props) => {
   return (
     <ResponsiveLine
       data={result}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -235,7 +235,6 @@ const StreamChart = (props) => {
 
   return (
     <ResponsiveStream
-      node={newNodes}
       data={streamData}
       keys={["Positive", "Negative", "Neutral"]}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
@@ -259,15 +258,6 @@ const StreamChart = (props) => {
       }}
       offsetType="silhouette"
       colors={{ scheme: "nivo" }}
-      /*colors={(node) => {
-        if (node.values[step] === 1) {
-          return "#E23C34"; //"red";
-        } else if (node.values[step] === 0) {
-          return "gray";
-        } else if (node.values[step] === -1) {
-          return "#5BB2DD"; //"blue";
-        }
-      }}*/
       fillOpacity={0.85}
       borderColor={{ theme: "background" }}
       defs={[
@@ -429,7 +419,7 @@ const MyResponsiveScatterPlot = (props) => {
   return (
     <ResponsiveScatterPlot
       data={result}
-      margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
+      margin={{ top: 60, right: 30, bottom: 70, left: 90 }}
       xScale={{ type: "log", min: 1, max: "auto" }}
       xFormat={function (e) {
         return e + "";
@@ -494,7 +484,8 @@ const MyResponsiveScatterPlot = (props) => {
 const App = () => {
   let positiveEl = useRef(null);
   let negativeEl = useRef(null);
-  let percentEl = useRef(null);
+  let remainPercent = 0;
+  //let percentEl = useRef(null);
   //step 10/9
   let stepEl = useRef(null);
   let currentStep = 50;
@@ -508,6 +499,11 @@ const App = () => {
   const handleChange = (event) => {
     event.preventDefault();
     currentStep = +event.target.value;
+  };
+
+  const handleRemain = (event) => {
+    event.preventDefault();
+    remainPercent = +event.target.value;
   };
 
   /*const handleSubmit = (event) => {
@@ -586,14 +582,14 @@ const App = () => {
 
   const percents = [0, 25, 50, 75, 100];
 
-  const perOptions = percents.map((value) => {
+  /*const perOptions = percents.map((value) => {
     return <option value={value}>{value}</option>;
-  });
+  });*/
 
   //onClick時　選択されたidを取得
 
   const clickButton = () => {
-    handleClickEvent(currentStep);
+    handleClickEvent(currentStep, remainPercent);
   };
 
   const handlestep = () => {
@@ -604,10 +600,9 @@ const App = () => {
     }
   };
 
-  const handleClickEvent = (currentStep) => {
+  const handleClickEvent = (currentStep, remainPercent) => {
     setStep(0);
     setnowStep(currentStep);
-    var percent;
     var positiveIds = [];
     var negativeIds = [];
 
@@ -615,11 +610,11 @@ const App = () => {
       stepOptions[i] = i;
     }
 
-    for (const option of percentEl.current.options) {
+    /*for (const option of percentEl.current.options) {
       if (option.selected === true) {
         percent = option.value;
       }
-    }
+    }*/
 
     for (const option of positiveEl.current.options) {
       if (option.selected === true) {
@@ -636,7 +631,7 @@ const App = () => {
       data,
       positiveIds,
       negativeIds,
-      percent,
+      remainPercent,
       currentStep
     );
 
@@ -669,15 +664,6 @@ const App = () => {
 
       {/*tile*/}
       <section className="section">
-        <div className="tile is-ancestor">
-          <div className="tile is-parent">
-            <article className="tile is-child notification is-white box">
-              <h1>概要</h1>
-              <p>Hello World!</p>
-            </article>
-          </div>
-        </div>
-
         <div className="tile is-ancestor">
           {/*詳細設定 */}
           <div className="tile is-parent is-2">
@@ -730,9 +716,14 @@ const App = () => {
                 <label className="label">自分の意思の割合</label>
                 {/*選択肢ボタン*/}
                 <div className="control">
-                  <div className="select is-fullwidth">
-                    <select ref={percentEl}>{perOptions}</select>
-                  </div>
+                  <form onChange={handleRemain}>
+                    <input
+                      className="input"
+                      name="remain"
+                      type="number"
+                      defaultValue={remainPercent}
+                    />
+                  </form>
                 </div>
                 <p className="help">自分の意思を0~100%の割合で反映します</p>
               </div>
@@ -761,7 +752,9 @@ const App = () => {
                     赤色は「正しい情報を知っている状態( Positive )」です。
                   </li>
                   <li>青色は「デマを信じている状態( Negative )」です。</li>
-                  <li>灰色は「何も知らない状態( Neutral )」です。</li>
+                  <li>
+                    灰色は「中立的な意見を持っている状態( Neutral )」です。
+                  </li>
                   <li>孤立ノードは予め取り除いています。</li>
                 </ul>
               </p>
@@ -793,7 +786,7 @@ const App = () => {
           </div>
           <div className="tile  is-vertical is-parent ">
             <article className="tile  is-vertical is-child notification is-white box">
-              <p className="title">ストリームグラフ</p>
+              <p className="title">折れ線グラフ</p>
               <p className="subtitle">
                 各タイムステップに対し、ノード数の割合を見る事ができます。
                 横軸が「各タイムステップ」、縦軸が「全体を１とした時の割合」です。
@@ -802,7 +795,7 @@ const App = () => {
               </p>
               <figure className="image is-2by1">
                 <div className="has-ratio" width="1000" height="500">
-                  <StreamChart
+                  <LineChart
                     step={step}
                     nowStep={nowStep}
                     newNodes={newNodes}
