@@ -580,8 +580,6 @@ const App = () => {
     return <option value={value.id}>{value}</option>;
   });
 
-  const percents = [0, 25, 50, 75, 100];
-
   /*const perOptions = percents.map((value) => {
     return <option value={value}>{value}</option>;
   });*/
