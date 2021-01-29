@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/nivo2/static/css/main.e909cbf0.chunk.css",
-    "main.js": "/nivo2/static/js/main.5d6622e2.chunk.js",
-    "main.js.map": "/nivo2/static/js/main.5d6622e2.chunk.js.map",
-    "runtime-main.js": "/nivo2/static/js/runtime-main.4e8a01d0.js",
-    "runtime-main.js.map": "/nivo2/static/js/runtime-main.4e8a01d0.js.map",
-    "static/js/2.b0b177b3.chunk.js": "/nivo2/static/js/2.b0b177b3.chunk.js",
-    "static/js/2.b0b177b3.chunk.js.map": "/nivo2/static/js/2.b0b177b3.chunk.js.map",
+    "main.js": "/nivo2/static/js/main.7f5e4b9b.chunk.js",
+    "main.js.map": "/nivo2/static/js/main.7f5e4b9b.chunk.js.map",
+    "runtime-main.js": "/nivo2/static/js/runtime-main.b8607819.js",
+    "runtime-main.js.map": "/nivo2/static/js/runtime-main.b8607819.js.map",
+    "static/js/2.883d1744.chunk.js": "/nivo2/static/js/2.883d1744.chunk.js",
+    "static/js/2.883d1744.chunk.js.map": "/nivo2/static/js/2.883d1744.chunk.js.map",
     "index.html": "/nivo2/index.html",
-    "precache-manifest.6bc5e678f931c1bb8e58d133c5b3e66e.js": "/nivo2/precache-manifest.6bc5e678f931c1bb8e58d133c5b3e66e.js",
+    "precache-manifest.fe8090b0ca21345915a663a681f4a342.js": "/nivo2/precache-manifest.fe8090b0ca21345915a663a681f4a342.js",
     "service-worker.js": "/nivo2/service-worker.js",
     "static/css/main.e909cbf0.chunk.css.map": "/nivo2/static/css/main.e909cbf0.chunk.css.map",
-    "static/js/2.b0b177b3.chunk.js.LICENSE.txt": "/nivo2/static/js/2.b0b177b3.chunk.js.LICENSE.txt"
+    "static/js/2.883d1744.chunk.js.LICENSE.txt": "/nivo2/static/js/2.883d1744.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.4e8a01d0.js",
-    "static/js/2.b0b177b3.chunk.js",
+    "static/js/runtime-main.b8607819.js",
+    "static/js/2.883d1744.chunk.js",
     "static/css/main.e909cbf0.chunk.css",
-    "static/js/main.5d6622e2.chunk.js"
+    "static/js/main.7f5e4b9b.chunk.js"
   ]
 }
